@@ -1430,3 +1430,305 @@ Si on remplace les 3× Thermor Ovation 3 (1250W) et 1× Atlantic Agilia (1000W) 
 - Marque peu connue en France → SAV à gérer directement avec Rointe (mais garantie 10 ans)
 - Puissance 1 200W au lieu de 1 250W → écart négligeable (50W = 1%)
 - Inertie fluide vs fonte sèche → impact DPE identique, confort très similaire
+
+---
+
+## 18. Connecter la VMC au CET — Évaluation de la possibilité et de l'intérêt
+
+### 18.1 Le concept : CET sur air extrait
+
+Un **CET sur air extrait** (enum_type_generateur_ecs_id = 9 dans la méthode 3CL) récupère l'air vicié extrait par la VMC pour alimenter l'évaporateur de la pompe à chaleur du chauffe-eau. Au lieu de rejeter cet air chaud (20-22°C) directement à l'extérieur via la VMC, on le fait d'abord passer dans le CET qui en extrait les calories avant de le rejeter refroidi (~5-10°C).
+
+```
+CONFIGURATION ACTUELLE (scénario 3) — VMC et CET séparés
+
+  VMC hygro B                    CET air extérieur
+  ┌──────────┐                   ┌──────────┐
+  │ Cuisine  │──→ Caisson ──→ Rejet ext.    │ Aspire  │──→ gaine Ø160 ext.
+  │ SDB      │──→ combles  ──→ chapeau      │ air ext │←── gaine Ø160 ext.
+  └──────────┘                   └──────────┘
+  (2 flux indépendants)          (2 gaines propres)
+
+
+CONFIGURATION CET SUR AIR EXTRAIT — VMC connectée au CET
+
+  VMC hygro B                    CET air extrait
+  ┌──────────┐                   ┌──────────────┐
+  │ Cuisine  │──→ Caisson ──→───→│ Entrée air   │
+  │ SDB      │──→ combles       │ (évaporateur) │──→ Rejet ext. refroidi
+  └──────────┘                   └──────────────┘
+  (le rejet VMC alimente le CET)  (1 seul rejet ext.)
+```
+
+### 18.2 Impact DPE simulé
+
+| | Scénario 3 (CET air ext.) | CET air extrait | Différence |
+|---|---|---|---|
+| Type CET (enum 3CL) | id 6 — air extérieur | id 9 — air extrait | — |
+| hvent (W/K) | 19,16 | 19,16 | = |
+| hperm (W/K) | 24,32 | 24,32 | = |
+| ep_chauffage (kWh EP) | 5 135 | 5 135 | = |
+| **ep_ECS (kWh EP)** | **959** | **856** | **-103 (-11%)** |
+| ep_auxiliaires (kWh EP) | 431 | 431 | = |
+| **EP TOTAL** | **6 704** | **6 601** | **-103** |
+| **EP/m²** | **129** | **127** | **-2** |
+| Classe énergie | C | C | = |
+
+**Le CET air extrait gagne 2 EP/m²** par rapport au CET air extérieur, grâce à un meilleur COP (l'air extrait à ~20°C est plus chaud que l'air extérieur moyen à Strasbourg ~10°C, ce qui améliore le rendement de la PAC).
+
+### 18.3 Avantages du CET sur air extrait
+
+| Avantage | Détail |
+|---|---|
+| **Meilleur COP** | L'air extrait est à ~20°C constant → COP supérieur et plus stable qu'avec l'air extérieur (variable -10°C à +35°C) |
+| **Gain DPE** | -2 EP/m² (127 vs 129). Modeste, mais va dans le bon sens |
+| **Moins de gaines** | Une seule sortie extérieure (le rejet du CET) au lieu de 2 gaines CET + 1 rejet VMC. Simplifie la toiture |
+| **Pas de refroidissement de la SDB** | Contrairement au CET sur air ambiant, l'air de la SDB n'est pas refroidi (l'air vient de la VMC, pas de la pièce) |
+| **Récupération d'énergie** | On récupère des calories qui seraient perdues → meilleur rendement global du logement |
+
+### 18.4 Inconvénients et contraintes
+
+| Inconvénient | Détail | Impact |
+|---|---|---|
+| **Débit d'air limité** | La VMC hygro B fournit ~60-200 m³/h. Un CET a besoin de ~150-250 m³/h pour fonctionner correctement. En mode nuit/absence (60-80 m³/h), le débit peut être insuffisant | ⚠️ **Critique** |
+| **Compatibilité technique** | Peu de CET du marché sont conçus pour fonctionner sur le débit variable d'une VMC hygro B. Les CET « air extrait » classiques intègrent souvent leur propre ventilateur et sont prévus pour un débit constant | ⚠️ **Contrainte** |
+| **Modèles spécifiques requis** | Il faut un CET conçu comme « VMC intégrée » (ex: Aldès T.Flow Hygro+, Atlantic Aeraulix) ou un CET air extrait certifié pour le débit de la VMC | 💰 Plus cher |
+| **Perte d'indépendance** | Si le CET tombe en panne, la VMC peut être impactée (et vice-versa). En scénario 3, les deux sont indépendants | ⚠️ Risque |
+| **Installation plus complexe** | Raccordement aéraulique VMC → CET → rejet. Plus de gaines, plus de raccords, risque de condensation si mal isolé | ⚠️ Complexité |
+| **Bruit** | Le CET (compresseur) est bruyant (~45-50 dB). S'il est connecté à la VMC, le bruit peut se propager via les gaines vers les pièces de vie | ⚠️ Confort |
+| **Entretien couplé** | Le nettoyage du filtre CET impacte les performances de la VMC et vice-versa | Mineur |
+
+### 18.5 Le problème central : le débit
+
+C'est **le point bloquant principal**. Voici les chiffres :
+
+| Paramètre | VMC Hygro B (Aldes EasyHome) | CET standard |
+|---|---|---|
+| Débit nuit / absence (bouches fermées) | **60-80 m³/h** | — |
+| Débit présence normale | 100-120 m³/h | — |
+| Débit boost (cuisine/SDB) | 150-200 m³/h | — |
+| **Débit requis par le CET** | — | **150-250 m³/h** |
+
+**60% du temps** (nuit + absence), la VMC fournit seulement 60-80 m³/h, soit **2-3× moins** que ce dont le CET a besoin. Avec un débit insuffisant :
+- Le COP chute (moins de calories à extraire)
+- Le CET bascule sur la résistance d'appoint (2 000 W) → consommation multipliée par 3-4
+- Le gain théorique de 2 EP/m² est annulé en pratique
+
+### 18.6 Solutions existantes sur le marché
+
+| Solution | Principe | Prix | Adapté T3 51,7 m² |
+|---|---|---|---|
+| **Aldès T.Flow Hygro+** | CET avec VMC intégrée dans un seul appareil. Le CET gère lui-même les débits de ventilation | ~2 500-3 500 € (CET + VMC combinés) | ⚠️ Encombrant (~180 cm de haut), prévu pour volume technique |
+| **Atlantic Aeraulix 3** | CET connecté VMC, avec gestion intelligente des débits | ~2 000-2 800 € | ⚠️ Nécessite volume de pose important |
+| **Thermor Aéromax VS** | CET avec VMC double flux intégrée | ~3 000-4 000 € | ❌ Surdimensionné pour ce logement |
+
+**Problème commun** : ces systèmes sont conçus pour des maisons individuelles ou des volumes techniques dédiés. Dans un appartement de 51,7 m² avec une SDB de 5 m², **aucun de ces modèles n'est pratique à installer**.
+
+### 18.7 Verdict : VMC connectée au CET
+
+| Critère | Évaluation |
+|---|---|
+| **Gain DPE théorique** | +2 EP/m² (127 → 129 = -2). Classe reste C |
+| **Gain DPE réel** | Probablement inférieur (problème de débit nuit) |
+| **Faisabilité technique** | ⚠️ **Difficile** — pas de modèle compact adapté à un T3 en appartement |
+| **Surcoût** | +800 à +2 000 € par rapport au scénario 3 (CET air ext. + VMC séparés) |
+| **Complexité d'installation** | ⭐⭐⭐⭐ (4/5) — raccordement aéraulique complexe |
+| **Risque de panne** | ⚠️ Couplage VMC/CET = point de défaillance unique |
+| **Intérêt pour la location** | ❌ **Non recommandé** — complexité SAV + surcoût disproportionné |
+
+### 18.8 Recommandation finale
+
+**❌ Ne pas connecter la VMC au CET.** Le gain de 2 EP/m² ne justifie pas :
+
+1. **Le surcoût** (~800-2 000 €) pour un gain de 103 kWh EP/an (~15-20 €/an d'économie réelle)
+2. **Le risque technique** d'un système couplé dans un petit appartement en location
+3. **La complexité** d'installation et de maintenance (le locataire ne saura pas gérer)
+4. **Le problème de débit** qui annule le gain théorique en pratique
+
+**→ Conserver le scénario 3 : VMC hygro B + CET air extérieur séparés.** C'est la configuration la plus simple, la plus fiable, et la plus adaptée à ce logement. Les deux systèmes sont indépendants, faciles à entretenir et à remplacer.
+
+> **Note** : si le logement était une maison avec un volume technique dédié (cellier, garage), le CET sur air extrait (type Aldès T.Flow) serait pertinent. Mais en appartement T3 de 51,7 m², ce n'est pas le bon choix.
+
+---
+
+## 19. Comment réduire le hperm du DPE — Travaux possibles en auto-rénovation
+
+### 19.1 Rappel : qu'est-ce que le hperm ?
+
+Le **hperm** (coefficient de déperdition par perméabilité à l'air) mesure les pertes thermiques dues aux **infiltrations d'air parasites** à travers l'enveloppe du bâtiment : joints de menuiseries, fissures, passages de gaines, prises électriques, coffres de volets roulants, etc.
+
+| Paramètre | Valeur actuelle | Part des déperditions |
+|---|---|---|
+| hperm (état actuel, sans VMC) | **28,48 W/K** | **27,0%** du total (105,6 W/K) |
+| hperm (avec VMC hygro B, scénario 3) | **24,32 W/K** | **24,5%** du total (99,4 W/K) |
+
+C'est le **2ème poste de déperditions** après hvent (ventilation mécanique), et le **1er poste sur lequel aucun des scénarios de rénovation n'agit directement**.
+
+### 19.2 Comment le 3CL calcule le hperm
+
+La méthode 3CL utilise une valeur **forfaitaire** appelée **Q4Pa_conv** (débit de fuite à 4 Pa conventionnel, en m³/(h·m²) de surface déperditive) :
+
+```
+Q4Pa_env = q4pa_conv × Sdep        (débit de fuite total enveloppe)
+Q4Pa = Q4Pa_env + 0.45 × smea_conv × Sh  (+ contribution VMC)
+n50 = Q4Pa / ((4/50)^(2/3) × Hsp × Sh)   (taux de renouvellement à 50 Pa)
+Qvinf = Hsp × Sh × n50 × e / (1 + (f/e) × ((Qvasouf - Qvarep)/(Hsp × n50))²)
+hperm = 0.34 × Qvinf
+```
+
+**Le paramètre clé est q4pa_conv**, qui est déterminé par une table forfaitaire :
+
+| Période de construction | Type de bâtiment | q4pa_conv (m³/(h·m²)) |
+|---|---|---|
+| Avant 1948 | Appartement | **4,6** |
+| 1948-1974 | Appartement | **2,0** |
+| **1975-2012** | **Appartement** | **1,5** ← votre logement |
+| Après 2012 | Appartement | **1,0** |
+
+### 19.3 Le verdict brutal : le hperm est FIXE dans le DPE
+
+**Pour un appartement construit entre 1975 et 2012, le q4pa_conv est fixé à 1,5 m³/(h·m²) dans la méthode 3CL.** Cette valeur ne change PAS en fonction de :
+
+- ❌ La présence ou absence de joints de menuiserie
+- ❌ L'état d'étanchéité réel du bâtiment
+- ❌ Les travaux de colmatage des fuites d'air
+- ❌ Le remplacement des fenêtres (sauf si Uw change, ce qui impacte un autre poste)
+
+**Aucun travail physique d'étanchéité à l'air ne peut modifier le hperm dans le DPE 3CL tant que la méthode forfaitaire est utilisée.**
+
+C'est une limitation connue et critiquée de la méthode 3CL : elle ne récompense pas les travaux d'étanchéité à l'air en rénovation, contrairement aux constructions neuves (RT2012/RE2020) qui utilisent des tests de perméabilité réels.
+
+### 19.4 La seule exception : le test d'infiltrométrie (blower door)
+
+La méthode 3CL prévoit une alternative : la **saisie directe** d'une valeur mesurée de q4pa_conv (`q4pa_conv_saisi`, méthode de saisie id = 2). Pour cela, il faut :
+
+1. **Réaliser un test d'infiltrométrie** (blower door test) par un opérateur certifié
+2. **Obtenir un Q4Pa_surf** mesuré en m³/(h·m²) à 4 Pa
+3. **Fournir ce résultat au diagnostiqueur DPE** qui l'intègre dans le calcul
+
+#### Impact simulé selon la valeur mesurée
+
+| q4pa_conv | hperm (W/K) | EP/m² (scén. 3) | Classe | Δ vs forfaitaire |
+|---|---|---|---|---|
+| **1,5** (forfaitaire actuel) | **24,32** | **129** | **C** | Référence |
+| **1,0** (bon état) | **13,80** | **113** | C | **-16 EP/m²** |
+| **0,6** (RT2012) | **6,27** | **102** | **B** | **-27 EP/m²** |
+| **0,3** (passif) | **2,15** | **95** | **B** | **-34 EP/m²** |
+
+**Si le logement atteint q4pa_conv = 0,6** (niveau RT2012, réaliste avec des fenêtres neuves et un bon colmatage), **le DPE passe en classe B** (102 EP/m²). C'est un gain spectaculaire de **-27 EP/m²**.
+
+### 19.5 Travaux d'étanchéité faisables soi-même (DIY)
+
+Même si ces travaux **ne changent pas le DPE forfaitaire**, ils ont un **impact réel sur la consommation et le confort**. Et si un test d'infiltrométrie est ensuite réalisé, ils seront pris en compte.
+
+#### A. Joints de menuiseries (fenêtres et portes) — ⭐ Priorité 1
+
+Les 5 baies vitrées (DV bois Uw=2,9) et la porte n'ont **aucun joint** selon le DPE (`presence_joint = 0` sur toutes les menuiseries). C'est la source principale d'infiltrations.
+
+| Travail | Matériel | Coût | Difficulté | Impact |
+|---|---|---|---|---|
+| **Joints mousse adhésifs** sur ouvrants | Rouleau mousse polyuréthane 9×6mm (Castorama) | 3-5 €/fenêtre, ~25 € total | ⭐ Très facile | Faible (se tasse en 1-2 ans) |
+| **Joints en silicone** (cordon appliqué dans la feuillure) | Cartouche silicone transparent + pistolet | 8-12 € | ⭐⭐ Facile | Moyen, durable |
+| **Joints EPDM caoutchouc** (encastrés dans rainure) | Joint EPDM à clipser + rainureuse manuelle | 5-8 €/fenêtre | ⭐⭐⭐ Moyen | **Élevé** — solution durable et efficace |
+| **Joint de seuil de porte** (bas de porte d'entrée) | Plinthe auto + joint brosse ou lèvre | 10-20 € | ⭐⭐ Facile | Moyen-élevé |
+
+**→ Recommandation DIY : joints EPDM** sur les 5 fenêtres + joint de seuil porte. **Budget total : ~50-70 €**, 2-3 heures de travail.
+
+#### B. Coffres de volets roulants — ⭐ Priorité 2
+
+Si l'appartement a des volets roulants (non mentionné dans le DPE), les coffres sont souvent une source majeure de fuites d'air.
+
+| Travail | Matériel | Coût | Difficulté | Impact |
+|---|---|---|---|---|
+| **Isolant mince pour coffre** (mousse + alu) | Rouleau isolant coffre VR 25mm (Castorama) | 15-25 € | ⭐⭐ Facile | Moyen (réduit infiltrations + ponts thermiques) |
+| **Joint mousse périphérique** du coffre | Mousse adhésive 15×8mm | 5-10 € | ⭐ Très facile | Faible-moyen |
+
+#### C. Passages de gaines et prises électriques — ⭐ Priorité 3
+
+Les prises et interrupteurs sur murs extérieurs sont des points de fuite d'air (l'air circule derrière le doublage placo+isolant et ressort par les boîtiers).
+
+| Travail | Matériel | Coût | Difficulté | Impact |
+|---|---|---|---|---|
+| **Membrane d'étanchéité pour boîtier** (type Minitec) | Kit Minitec étanchéité (pochette 10 membranes) | 15-30 € | ⭐⭐ Facile (couper le courant) | Moyen |
+| **Mousse expansive** autour des gaines traversantes | Bombe mousse PU | 8-12 € | ⭐ Très facile | Moyen |
+| **Mastic acrylique** périphérique des plinthes | Cartouche mastic + pistolet | 5-8 € | ⭐ Très facile | Faible |
+
+#### D. Traversées de plancher et plafond — ⭐ Priorité 4
+
+Les passages de tuyaux (ancien chauffage gaz), gaines électriques et VMC à travers plancher et plafond créent des fuites.
+
+| Travail | Matériel | Coût | Difficulté | Impact |
+|---|---|---|---|---|
+| **Mousse expansive** dans les trous de tuyaux déposés | Bombe mousse PU (feu M1 si possible) | 8-12 € | ⭐ Très facile | Moyen-élevé (surtout après dépose des tuyaux gaz) |
+| **Collerettes coupe-feu** sur gaines traversantes | Collerette intumescente Ø125/160 | 15-25 €/pce | ⭐⭐ Facile | Sécurité + étanchéité |
+| **Plâtre / mortier** pour rebouchage définitif | Sac plâtre + spatule | 10-15 € | ⭐⭐ Facile | Élevé si gros trous |
+
+### 19.6 Budget total DIY étanchéité à l'air
+
+| Poste | Coût | Temps |
+|---|---|---|
+| Joints EPDM fenêtres (×5) | ~40-50 € | 2h |
+| Joint de seuil porte d'entrée | ~15-20 € | 30 min |
+| Isolant + joints coffres VR (si présents) | ~25-35 € | 1h |
+| Membranes boîtiers électriques murs ext. | ~25-30 € | 1h |
+| Mousse expansive passages gaines/tuyaux | ~15-20 € | 30 min |
+| Mastic périphérique plinthes | ~8-10 € | 1h |
+| **Total DIY** | **~130-170 €** | **~6-7 heures** |
+
+### 19.7 Test d'infiltrométrie — Pour valoriser les travaux dans le DPE
+
+| Paramètre | Détail |
+|---|---|
+| **Quoi** | Test porte soufflante (blower door) mesurant le Q4Pa_surf réel |
+| **Qui** | Opérateur certifié Qualibat 8711 (infiltrométrie) |
+| **Coût** | **300-500 €** pour un appartement |
+| **Durée** | ~2 heures sur place |
+| **Résultat** | Un rapport avec le Q4Pa_surf mesuré, utilisable par le diagnostiqueur DPE |
+| **Quand le faire** | **Après** tous les travaux d'étanchéité + après installation VMC + après rebouchage des passages de gaines |
+
+#### Valeur attendue après travaux
+
+| État | Q4Pa_surf estimé | Classe équivalente |
+|---|---|---|
+| Bâtiment 1997 sans travaux (forfaitaire) | 1,5 m³/(h·m²) | Standard 1997 |
+| Après joints fenêtres + colmatage gaines | **0,8-1,2 m³/(h·m²)** | Amélioré |
+| Après remplacement fenêtres Uw=1.3 + colmatage complet | **0,4-0,8 m³/(h·m²)** | Proche RT2012 |
+| RT2012 neuf | ≤ 0,6 m³/(h·m²) | Référence |
+
+**Estimation réaliste pour ce logement après travaux DIY (sans changement de fenêtres) : q4pa ≈ 1,0 m³/(h·m²)**, ce qui donnerait un hperm de 13,80 W/K au lieu de 24,32 → **EP/m² = 113 au lieu de 129 = -16 EP/m²**.
+
+### 19.8 Synthèse : peut-on réduire le hperm et quel impact sur le DPE ?
+
+| Question | Réponse |
+|---|---|
+| **Les travaux DIY réduisent-ils le hperm RÉEL ?** | ✅ **Oui** — joints, mousse, membranes réduisent les infiltrations réelles et améliorent le confort + réduisent la facture |
+| **Les travaux DIY changent-ils le hperm du DPE ?** | ❌ **Non** — la méthode 3CL utilise une valeur forfaitaire (q4pa=1,5) basée sur la période de construction, pas sur l'état réel |
+| **Peut-on forcer la prise en compte ?** | ✅ **Oui, avec un test d'infiltrométrie** — un test porte soufflante (300-500 €) mesure le q4pa réel et le diagnostiqueur peut l'utiliser |
+| **Quel gain DPE potentiel ?** | Si q4pa mesuré ≈ 1,0 → **-16 EP/m²** (129→113). Si q4pa ≈ 0,6 (avec nouvelles fenêtres) → **-27 EP/m²** (129→102 = classe B !) |
+| **Le DIY est-il rentable ?** | ✅ **Oui pour le confort et la facture** (~130-170 € de matériaux). Pour le DPE, seulement si suivi d'un test d'infiltrométrie (+300-500 €) |
+
+### 19.9 Recommandation
+
+#### Phase 1 — DIY immédiat (~130-170 €, 6-7h)
+
+Faire **tous les travaux d'étanchéité DIY** listés en §19.5 **avant** l'installation de la VMC et du CET. Ces travaux :
+- Améliorent le confort thermique immédiatement (moins de courants d'air froid)
+- Réduisent la consommation réelle de chauffage (économie estimée 5-10%)
+- Préparent le logement pour un éventuel test d'infiltrométrie
+
+#### Phase 2 — Test d'infiltrométrie optionnel (~300-500 €)
+
+**Après** la rénovation complète (chauffage + ECS + VMC + étanchéité DIY), si le propriétaire souhaite **améliorer encore l'étiquette DPE** :
+1. Commander un test porte soufflante
+2. Si le Q4Pa mesuré est ≤ 1,0 → fournir le rapport au diagnostiqueur pour le prochain DPE
+3. **Gain potentiel : 113 EP/m² au lieu de 129 = -16 EP/m²**, toujours classe C mais marge confortable
+
+#### Phase 3 — Si objectif classe B (optionnel, long terme)
+
+Pour atteindre la **classe B** (< 110 EP/m²), il faudrait combiner :
+- Travaux DIY étanchéité (§19.5) ✅
+- Remplacement des fenêtres Uw=1.3 (scénario 5, ~3 000-5 000 € supplémentaires)
+- Test d'infiltrométrie montrant q4pa ≤ 0,6
+- → **EP/m² ≈ 93-102 = classe B**
+
+> **Résumé** : les travaux DIY d'étanchéité (130-170 €) sont toujours rentables pour le confort et la facture. Pour qu'ils impactent le DPE, un test d'infiltrométrie (300-500 €) est nécessaire. Le combo DIY + test peut faire gagner **-16 EP/m²** sur le DPE, et jusqu'à **-27 EP/m²** avec de nouvelles fenêtres (passage en classe B).
