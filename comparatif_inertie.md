@@ -1570,7 +1570,7 @@ La méthode 3CL utilise une valeur **forfaitaire** appelée **Q4Pa_conv** (débi
 
 ```
 Q4Pa_env = q4pa_conv × Sdep        (débit de fuite total enveloppe)
-Q4Pa = Q4Pa_env + 0.45 × smea_conv × Sh  (+ contribution VMC)
+Q4Pa = Q4Pa_env + 0.45 × smea_conv × Sh  (+ contribution VMC ; smea_conv = débit spécifique conventionnel de la VMC en m³/(h·m²))
 n50 = Q4Pa / ((4/50)^(2/3) × Hsp × Sh)   (taux de renouvellement à 50 Pa)
 Qvinf = Hsp × Sh × n50 × e / (1 + (f/e) × ((Qvasouf - Qvarep)/(Hsp × n50))²)
 hperm = 0.34 × Qvinf
@@ -1649,7 +1649,7 @@ Les prises et interrupteurs sur murs extérieurs sont des points de fuite d'air 
 
 | Travail | Matériel | Coût | Difficulté | Impact |
 |---|---|---|---|---|
-| **Membrane d'étanchéité pour boîtier** (type Minitec) | Kit Minitec étanchéité (pochette 10 membranes) | 15-30 € | ⭐⭐ Facile (couper le courant) | Moyen |
+| **Membranes d'étanchéité pour boîtier** (type Minitec) | Kit Minitec étanchéité (pochette 10 membranes) | 15-30 € | ⭐⭐ Facile (couper le courant **au disjoncteur du circuit concerné au tableau**) | Moyen |
 | **Mousse expansive** autour des gaines traversantes | Bombe mousse PU | 8-12 € | ⭐ Très facile | Moyen |
 | **Mastic acrylique** périphérique des plinthes | Cartouche mastic + pistolet | 5-8 € | ⭐ Très facile | Faible |
 
@@ -1695,7 +1695,7 @@ Les passages de tuyaux (ancien chauffage gaz), gaines électriques et VMC à tra
 | Après remplacement fenêtres Uw=1.3 + colmatage complet | **0,4-0,8 m³/(h·m²)** | Proche RT2012 |
 | RT2012 neuf | ≤ 0,6 m³/(h·m²) | Référence |
 
-**Estimation réaliste pour ce logement après travaux DIY (sans changement de fenêtres) : q4pa ≈ 1,0 m³/(h·m²)**, ce qui donnerait un hperm de 13,80 W/K au lieu de 24,32 → **EP/m² = 113 au lieu de 129 = -16 EP/m²**.
+**Estimation réaliste pour ce logement après travaux DIY (sans changement de fenêtres) : q4pa ≈ 1,0 m³/(h·m²)** (estimation optimiste — le gain dépend fortement de la qualité de pose des joints et du nombre réel de points de fuite ; en pratique 1,0-1,2 est plus probable), ce qui donnerait un hperm de 13,80 W/K au lieu de 24,32 → **EP/m² = 113 au lieu de 129 = -16 EP/m²**.
 
 ### 19.8 Synthèse : peut-on réduire le hperm et quel impact sur le DPE ?
 
