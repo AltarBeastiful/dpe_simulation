@@ -1847,9 +1847,9 @@ EXTÉRIEUR                                        INTÉRIEUR
 
 | Produit | Type | Débit | Plage hygro | Rainure requise | Prix TTC | Référence |
 |---|---|---|---|---|---|---|
-| **Aereco EHA²** | Hygro B | 5-35 m³/h | 35-70% HR | 370 × 12 mm | **20-30 €** | Référence du marché, installée dans >50% des VMC hygro en France |
+| **Aereco EHA²** | Hygro B | 5-35 m³/h | 35-70% HR | 370 × 12 mm | **20-30 €** | Référence du marché, modèle le plus installé en VMC hygro en France |
 | **Aereco EHA² S** (acoustique) | Hygro B acoustique | 5-35 m³/h | 35-70% HR | 370 × 12 mm | **35-45 €** | Version avec atténuation acoustique 37 dB (façade bruyante) |
-| **Aldes EA BHB** (anciennement EAH) | Hygro B | 5-35 m³/h | 35-70% HR | 370 × 12 mm | **20-30 €** | Alternative Aldes, compatible tous caissons SF |
+| **Aldes EA BHB** (anciennement EAH) | Hygro B | 5-35 m³/h | 35-70% HR | 370 × 12 mm | **20-30 €** | Alternative Aldes, compatible avec tous les caissons SF |
 | **Atlantic Hygrocosy** | Hygro B | 5-35 m³/h | 35-70% HR | 370 × 12 mm | **18-25 €** | Moins courant, bonne qualité |
 
 > **Comment fonctionne l'hygroréglable** : le module contient une tresse en polyamide sensible à l'humidité. Quand l'air intérieur est sec (absence, nuit), la tresse se contracte et réduit le passage d'air à ~5 m³/h. Quand l'humidité augmente (présence, respiration, douche), la tresse s'allonge et ouvre le passage jusqu'à ~35 m³/h. Aucune alimentation électrique nécessaire.
@@ -1989,7 +1989,7 @@ L'idée serait d'amener l'air neuf extérieur via une **prise d'air en toiture o
 | **Faisabilité technique** | ⚠️ Possible mais complexe — nécessite une prise d'air extérieure en toiture (chapeau + filtre), des gaines d'insufflation isolées dans les combles froids, et des bouches d'insufflation au plafond |
 | **Compatibilité VMC SF** | ❌ **Non standard** — une VMC simple flux n'a PAS de gaines d'insufflation. L'amenée d'air est passive (par dépression). Ajouter des gaines d'amenée en transformerait le concept en insufflation mécanique ou en double flux |
 | **Compatibilité DPE** | ❌ **Problématique** — le diagnostiqueur s'attend à des entrées d'air dans les menuiseries ou les murs, pas à un réseau d'insufflation. Un réseau d'amenée par le plafond correspondrait à une VMC double flux (enum_type_ventilation_id différent) |
-| **Condensation** | ⚠️ **Risque élevé** — l'air extérieur froid traversant les combles non isolés (T° proche extérieur) dans des gaines jusqu'aux pièces chaudes ne pose pas de problème de condensation à l'intérieur des gaines (air sec entrant), mais les gaines elles-mêmes seront froides et peuvent provoquer de la condensation sur leur surface extérieure dans les pièces chaudes si l'isolation est insuffisante |
+| **Condensation** | ⚠️ **Risque élevé** — l'air extérieur sec entrant dans les gaines ne condense pas à l'intérieur. En revanche, les gaines froides traversant les combles non isolés peuvent provoquer de la condensation sur leur surface extérieure à l'arrivée dans les pièces chaudes, si l'isolation des gaines est insuffisante |
 | **Intérêt réel** | ❌ **Faible** — aucun avantage par rapport aux entrées d'air en façade (solutions 1 et 2), complexité supérieure, et non conforme au schéma standard VMC SF |
 
 #### Utilité réelle des combles pour la VMC
