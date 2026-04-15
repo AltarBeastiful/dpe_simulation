@@ -1732,3 +1732,366 @@ Pour atteindre la **classe B** (< 110 EP/m²), il faudrait combiner :
 - → **EP/m² ≈ 93-102 = classe B**
 
 > **Résumé** : les travaux DIY d'étanchéité (130-170 €) sont toujours rentables pour le confort et la facture. Pour qu'ils impactent le DPE, un test d'infiltrométrie (300-500 €) est nécessaire. Le combo DIY + test peut faire gagner **-16 EP/m²** sur le DPE, et jusqu'à **-27 EP/m²** avec de nouvelles fenêtres (passage en classe B).
+
+---
+
+## 20. Entrées d'air pour la VMC — Solutions pour fenêtres bois DV existantes
+
+> **Problème** : la VMC simple flux hygro B nécessite des **entrées d'air** dans les pièces principales (salon, chambres) pour fonctionner. Or les fenêtres actuelles — battantes bois, double vitrage avec lame d'air 16 mm, Uw = 2,9 — **n'ont pas d'entrées d'air intégrées**. Sans ces entrées d'air, la VMC ne peut pas être correctement prise en compte dans le DPE et ne fonctionne pas dans de bonnes conditions aérauliques.
+
+### 20.1 Pourquoi les entrées d'air sont obligatoires pour le DPE
+
+#### Exigence réglementaire
+
+La VMC simple flux fonctionne sur le principe du **balayage** : l'air neuf entre par les pièces principales (séjour, chambres) via des entrées d'air, traverse le logement sous les portes, et est extrait dans les pièces humides (cuisine, SDB) par les bouches d'extraction reliées au caisson VMC.
+
+| Élément | Rôle | Localisation |
+|---|---|---|
+| **Entrées d'air** (amenée) | Laisser entrer l'air neuf extérieur de façon contrôlée | Pièces principales : salon, chambres |
+| **Détalonnage portes** (passage) | Permettre le transit de l'air entre les pièces | Sous les portes intérieures (~1 cm de jour) |
+| **Bouches d'extraction** (évacuation) | Aspirer l'air vicié chargé d'humidité | Pièces humides : cuisine, SDB |
+| **Caisson VMC** (moteur) | Créer la dépression qui aspire l'air dans le circuit | Combles (dans notre cas) |
+
+**Sans entrées d'air, le circuit aéraulique est incomplet** : le caisson VMC crée une dépression mais l'air ne peut entrer que par les défauts d'étanchéité (infiltrations non contrôlées), ce qui génère des courants d'air parasites, des sifflements, et un fonctionnement dégradé.
+
+#### Ce que vérifie le diagnostiqueur DPE
+
+Pour saisir une VMC simple flux hygro B dans le DPE (enum_type_ventilation_id = "15"), le diagnostiqueur doit constater la présence de :
+- ✅ Un caisson VMC fonctionnel
+- ✅ Des bouches d'extraction hygroréglables dans les pièces humides
+- ✅ **Des entrées d'air dans les menuiseries ou les murs des pièces principales**
+
+Si les entrées d'air sont absentes, le diagnostiqueur peut refuser de qualifier le système en VMC hygro B et le classer en « ventilation naturelle par entrées d'air hautes et basses » ou « ventilation par ouverture des fenêtres » (la situation actuelle), ce qui annule tout le bénéfice DPE.
+
+#### Référence réglementaire
+
+- **Arrêté du 24 mars 1982** (modifié) : fixe les débits minimaux d'air neuf par pièce. Pour un T3 : 105 m³/h en pointe (cuisine 45 + SDB 30 + WC 30), réduit en hygro B.
+- **DTU 68.3** (Ventilation mécanique) : spécifie que les entrées d'air doivent être placées dans les pièces principales, en partie haute (≥ 1,80 m du sol), et dimensionnées pour le débit requis.
+- **Méthode 3CL-DPE 2021** : le type de ventilation (enum_type_ventilation_id) conditionne le calcul de hvent et les débits conventionnels. La VMC hygro B (id=15) ne peut être saisie que si le système est complet (caisson + extraction + amenée d'air).
+
+### 20.2 Inventaire des fenêtres et besoins en entrées d'air
+
+#### Fenêtres actuelles donnant sur l'extérieur
+
+| Fenêtre | Orientation | Pièce | Surface | Menuiserie | Vitrage | Uw | Présence joint | Entrée d'air |
+|---|---|---|---|---|---|---|---|---|
+| Fenêtre 1 | **Ouest** | Salon | 1,76 m² | Bois battante | DV lame air 16mm | 2,9 | ❌ Non | ❌ Non |
+| Fenêtre 2 | **Ouest** | Salon | 1,76 m² | Bois battante | DV lame air 16mm | 2,9 | ❌ Non | ❌ Non |
+| Fenêtre 3 | **Est** | Chambre | 1,32 m² | Bois battante | DV lame air 16mm | 2,4 | ❌ Non | ❌ Non |
+| Fenêtre 4 | **Est** | Chambre | 1,32 m² | Bois battante | DV lame air 16mm | 2,4 | ❌ Non | ❌ Non |
+| Fenêtre 5 | **Est** | Cuisine | 0,68 m² | Bois battante | DV lame air 16mm | 2,9 | ❌ Non | ❌ Non |
+
+> **Note** : la cuisine est une pièce humide (extraction), elle ne nécessite **pas** d'entrée d'air. Les entrées d'air sont requises dans le **salon** (2 fenêtres Ouest) et la **chambre** (2 fenêtres Est).
+
+#### Débits d'entrée d'air requis (VMC hygro B, T3)
+
+| Pièce | Norme | Débit entrée d'air | Nb entrées d'air recommandées |
+|---|---|---|---|
+| **Salon** | Pièce principale, 2 fenêtres sur façade Ouest | 30-45 m³/h (total) | **2** (une par fenêtre, module 15-22 m³/h chacune) |
+| **Chambre** | Pièce principale, 2 fenêtres sur façade Est | 15-30 m³/h (total) | **1 ou 2** (une suffit si module 15-22 m³/h, deux pour meilleur balayage) |
+| Cuisine | Pièce humide → extraction, pas d'amenée | — | 0 |
+| SDB | Pièce humide → extraction, pas d'amenée | — | 0 |
+
+**Minimum : 3 entrées d'air** (2 salon + 1 chambre). Idéal : 4 entrées d'air (2 salon + 2 chambre).
+
+### 20.3 Solution 1 — Fraisage du dormant bois (✅ RECOMMANDÉE)
+
+#### Principe
+
+La technique standard consiste à **fraiser une rainure** dans la **traverse haute** du dormant (cadre fixe) de la fenêtre bois, puis à y clipser un module d'entrée d'air hygroréglable ou auto-réglable. C'est la solution la plus courante en rénovation avec fenêtres bois.
+
+#### Pourquoi le bois est le matériau idéal pour cette opération
+
+| Avantage | Détail |
+|---|---|
+| **Usinage facile** | Le bois se fraise, se scie et se perce facilement avec des outils standard (défonceuse, scie sauteuse, perceuse) |
+| **Épaisseur suffisante** | Un dormant bois a typiquement 56-68 mm d'épaisseur, largement suffisant pour intégrer un module EA |
+| **Pas de rupture de pont thermique** | Contrairement à l'aluminium, le bois n'aggrave pas le pont thermique au niveau de l'usinage |
+| **Réversible** | Si besoin, la rainure peut être rebouchée avec une pièce de bois + mastic |
+
+> **Comparaison** : sur fenêtres PVC ou aluminium, le fraisage est risqué (fragilisation du profilé, rupture du dormant) et souvent déconseillé par les fabricants. Sur bois, c'est la méthode standard préconisée par les fabricants d'entrées d'air (Aereco, Aldes, Atlantic).
+
+#### Opération technique
+
+```
+VUE EN COUPE — Traverse haute du dormant bois
+
+EXTÉRIEUR                                        INTÉRIEUR
+    │                                                │
+    │    ┌─────────────────────────────────┐         │
+    │    │       Dormant bois ~60 mm       │         │
+    │    │                                 │         │
+    │    │    ┌─────────────────────┐      │         │
+    │    │    │  Rainure fraisée    │      │         │
+    │    │    │  ~370 × 12 × 40 mm │      │         │
+    │    │    └─────────────────────┘      │         │
+    │    │                                 │         │
+    │    └─────────────────────────────────┘         │
+    │         ↑                                      │
+    │     Grille ext.                   Module EA hygro clipé
+    │     (pluie + insectes)            côté intérieur
+```
+
+**Étapes de réalisation** :
+
+1. **Repérage** : marquer l'emplacement sur la traverse haute, centrée, en vérifiant qu'il n'y a pas de quincaillerie (paumelles, crémone) à cet endroit
+2. **Perçage guide** : percer 2 trous Ø10 mm aux extrémités de la future rainure pour délimiter
+3. **Fraisage** : fraiser une rainure traversante de **370 × 12 mm** (module standard Aereco/Aldes) à travers toute l'épaisseur du dormant, à l'aide d'une défonceuse avec guide ou d'une scie sauteuse
+4. **Finition** : ébavurer, poncer les bords, appliquer une couche de lasure/peinture pour protéger le bois mis à nu
+5. **Pose grille extérieure** : visser la grille pare-pluie et anti-insectes côté extérieur
+6. **Pose module intérieur** : clipser le module d'entrée d'air (auto-réglable ou hygroréglable) côté intérieur
+
+#### Modules d'entrées d'air compatibles
+
+##### A. Entrées d'air hygroréglables (pour VMC hygro B — recommandé)
+
+| Produit | Type | Débit | Plage hygro | Rainure requise | Prix TTC | Référence |
+|---|---|---|---|---|---|---|
+| **Aereco EHA²** | Hygro B | 5-35 m³/h | 35-70% HR | 370 × 12 mm | **20-30 €** | Référence du marché, installée dans >50% des VMC hygro en France |
+| **Aereco EHA² S** (acoustique) | Hygro B acoustique | 5-35 m³/h | 35-70% HR | 370 × 12 mm | **35-45 €** | Version avec atténuation acoustique 37 dB (façade bruyante) |
+| **Aldes EA BHB** (anciennement EAH) | Hygro B | 5-35 m³/h | 35-70% HR | 370 × 12 mm | **20-30 €** | Alternative Aldes, compatible tous caissons SF |
+| **Atlantic Hygrocosy** | Hygro B | 5-35 m³/h | 35-70% HR | 370 × 12 mm | **18-25 €** | Moins courant, bonne qualité |
+
+> **Comment fonctionne l'hygroréglable** : le module contient une tresse en polyamide sensible à l'humidité. Quand l'air intérieur est sec (absence, nuit), la tresse se contracte et réduit le passage d'air à ~5 m³/h. Quand l'humidité augmente (présence, respiration, douche), la tresse s'allonge et ouvre le passage jusqu'à ~35 m³/h. Aucune alimentation électrique nécessaire.
+
+##### B. Entrées d'air auto-réglables (pour VMC hygro A ou auto — alternative économique)
+
+| Produit | Type | Débit fixe | Rainure requise | Prix TTC |
+|---|---|---|---|---|
+| Aereco EA 22 | Auto 22 m³/h | 22 m³/h constant | 250 × 12 mm | **8-12 €** |
+| Aereco EA 30 | Auto 30 m³/h | 30 m³/h constant | 250 × 12 mm | **8-12 €** |
+| Aereco EA 45 | Auto 45 m³/h | 45 m³/h constant | 370 × 12 mm | **10-15 €** |
+| Aldes EA AR | Auto 22/30/45 | Variable selon module | 250 ou 370 mm | **8-15 €** |
+
+> ⚠️ **Pour une VMC hygro B complète**, les entrées d'air **doivent être hygroréglables** (type EHA²). Des entrées auto-réglables transformeraient le système en « VMC hygro A » (extraction hygro + amenée auto), ce qui est un type différent dans le DPE (enum_type_ventilation_id différent, gain légèrement inférieur).
+
+#### Chiffrage solution 1 — Fraisage dormant bois
+
+| Poste | Détail | Quantité | Coût unitaire | Total |
+|---|---|---|---|---|
+| Entrées d'air Aereco EHA² hygro B | Module intérieur + grille extérieure | 3 à 4 | 25-30 € | **75-120 €** |
+| Gabarit de perçage Aereco (optionnel) | Gabarit métal pour fraisage précis | 1 | 30-50 € | **30-50 €** |
+| Lasure/peinture bois (retouche) | Pour protéger le bois mis à nu | 1 pot | 10-15 € | **10-15 €** |
+| **Total matériel DIY** | | | | **115-185 €** |
+| Main d'œuvre (si posé par menuisier) | ~30-45 min par fenêtre | 3-4 fenêtres | 40-60 € | **120-240 €** |
+| **Total posé par professionnel** | | | | **235-425 €** |
+
+#### Avantages et inconvénients
+
+| ✅ Avantages | ❌ Inconvénients |
+|---|---|
+| Solution standard et éprouvée (DTU 68.3) | Nécessite un outil de fraisage (défonceuse ou scie sauteuse) |
+| Le bois se prête parfaitement à l'usinage | Opération irréversible (bien que rebouchable) |
+| Coût le plus bas de toutes les solutions | Légère dégradation thermique au point de l'entrée d'air (~0,1-0,2 W/K par EA) |
+| Entrée d'air intégrée à la fenêtre = invisible | Risque de finition imparfaite si outillage inadapté |
+| 100% compatible DPE hygro B | Protection bois à refaire après fraisage (lasure) |
+| Pas de percement de façade ni de mur | — |
+
+### 20.4 Solution 2 — Entrées d'air murales en traversée de mur
+
+#### Principe
+
+Au lieu de modifier les fenêtres, on perce un **trou traversant** dans le mur extérieur (Ø100-125 mm) et on y insère un manchon avec une entrée d'air hygroréglable côté intérieur et une grille pare-pluie côté extérieur. Cette solution est utilisée quand les fenêtres ne peuvent pas être modifiées (PVC, aluminium, fenêtres patrimoniales).
+
+#### Application à ce logement
+
+Rappel de la composition des murs extérieurs : **BA13 (13 mm) + laine minérale (90 mm) + brique creuse (200 mm)** = épaisseur totale ~30 cm.
+
+```
+VUE EN COUPE — Traversée de mur pour entrée d'air
+
+INTÉRIEUR                                                    EXTÉRIEUR
+    │                                                            │
+    │  BA13   Laine minérale 90mm     Brique creuse 200mm       │
+    │  13mm   ┌─────────────┐        ┌──────────────────┐       │
+    │ ┌──┐    │             │        │                  │       │
+    │ │  │────│─── Manchon PVC/alu Ø100mm traversant ───│───────│── Grille
+    │ │  │────│────────── ~300 mm ──────────────────────│───────│── ext.
+    │ └──┘    │             │        │                  │       │
+    │         └─────────────┘        └──────────────────┘       │
+    │  ↑                                                         │
+    │  Module EA hygro                                           │
+    │  clipé sur manchon                                         │
+```
+
+#### Produits disponibles
+
+| Produit | Type | Débit | Diamètre percement | Prix TTC | Note |
+|---|---|---|---|---|---|
+| **Aereco EHT** | Hygro B murale | 5-35 m³/h | Ø100 mm | **45-60 €** | Version murale de la EHA², avec manchon isolé |
+| **Aldes BAM Hygro** | Hygro B murale | 5-35 m³/h | Ø100 mm | **40-55 €** | Manchon PVC avec isolant intégré, grille ext. |
+| **Atlantic Hygrocosy murale** | Hygro B murale | 5-35 m³/h | Ø100 mm | **35-50 €** | Moins courant |
+| **Anjos VM-T hygro** | Hygro B murale | 5-35 m³/h | Ø100 mm | **35-50 €** | Fabricant spécialisé ventilation |
+
+#### Chiffrage solution 2 — Traversée de mur
+
+| Poste | Détail | Quantité | Coût unitaire | Total |
+|---|---|---|---|---|
+| Entrées d'air murales hygro B | Module + manchon isolé + grille ext. | 3 à 4 | 45-60 € | **135-240 €** |
+| Trépan/carottier Ø100 mm | Pour percer la brique creuse + isolant | 1 | 25-40 € | **25-40 €** |
+| Mousse expansive / mastic | Étanchéité périphérique du manchon | 1 | 8-12 € | **8-12 €** |
+| **Total matériel DIY** | | | | **168-292 €** |
+| Main d'œuvre (si posé par professionnel) | Percement + pose, ~45-60 min/entrée | 3-4 entrées | 60-80 € | **180-320 €** |
+| **Total posé par professionnel** | | | | **350-610 €** |
+
+#### Avantages et inconvénients
+
+| ✅ Avantages | ❌ Inconvénients |
+|---|---|
+| Ne touche pas aux fenêtres existantes | **Percement Ø100 dans le mur** : travail plus lourd (carottier ou perforateur SDS) |
+| Positionnement libre (hauteur, distance fenêtre) | Traverse l'isolant → **pont thermique ponctuel** (le manchon isolé limite mais n'élimine pas) |
+| 100% compatible DPE hygro B | Grille visible côté façade extérieure (copropriété : accord AG peut être nécessaire) |
+| Peut être obturée/rebouchée si besoin | Plus cher que le fraisage dormant bois (~×1,5) |
+| Fonctionne même si les fenêtres sont changées ensuite | Poussière importante lors du percement (brique + isolant) |
+| — | Risque de percer un tuyau ou câble dans le mur (détecteur obligatoire) |
+
+> ⚠️ **Copropriété** : le percement du mur extérieur est une modification de façade. Selon le règlement de copropriété, un accord de l'assemblée générale peut être requis. En pratique, pour des trous Ø100 mm dissimulés sous des grilles discrètes, de nombreux syndics tolèrent sans AG, mais il est prudent d'obtenir un accord écrit.
+
+### 20.5 Solution 3 — Remplacement des fenêtres avec entrées d'air intégrées
+
+#### Principe
+
+Des fenêtres neuves (PVC, bois ou mixte) sont disponibles avec des **entrées d'air hygroréglables pré-intégrées** dans la traverse haute dès la fabrication. C'est la solution « tout en un » qui combine amélioration thermique (Uw = 1,1-1,3) et amenée d'air VMC.
+
+#### Lien avec le scénario 5 du DPE
+
+Le scénario 5 de la simulation (`run_scenarios.js`) modélise déjà le remplacement des fenêtres par du **DV argon VIR PVC Uw = 1,3**. En y ajoutant les entrées d'air intégrées, on obtient un système complet VMC + enveloppe performante.
+
+| Paramètre | Fenêtres actuelles (bois DV) | Fenêtres neuves (scénario 5) |
+|---|---|---|
+| Uw | 2,9 W/m²·K | 1,3 W/m²·K |
+| Sw | 0,47 | 0,42 |
+| Menuiserie | Bois | PVC |
+| Présence joint | ❌ Non | ✅ Oui |
+| Entrée d'air intégrée | ❌ Non | ✅ Oui (en option à la commande) |
+| Impact DPE (scénario 5) | — | 113 EP/m² (vs 129 scénario 3) |
+
+#### Chiffrage
+
+| Poste | Détail | Quantité | Coût unitaire | Total |
+|---|---|---|---|---|
+| Fenêtres PVC DV argon VIR Uw ≤ 1,3 + EA hygro | Fourniture posée | 5 fenêtres | 500-800 € | **2 500-4 000 €** |
+| Surcoût EA hygroréglable par fenêtre | Option EA intégrée à la commande | 3-4 | 15-25 € | **45-100 €** |
+| **Total estimé** | | | | **2 545-4 100 €** |
+
+> **Note** : le remplacement complet des fenêtres n'est PAS nécessaire pour faire fonctionner la VMC dans le DPE. Les solutions 1 et 2 suffisent. Le remplacement ne se justifie que si l'objectif est aussi d'améliorer l'isolation thermique (passage de Uw=2,9 à 1,3 → gain de 16 EP/m² supplémentaires, passage potentiel en classe B).
+
+### 20.6 Solution 4 — Passage des gaines d'amenée d'air par les combles
+
+#### Principe et faisabilité
+
+L'idée serait d'amener l'air neuf extérieur via une **prise d'air en toiture ou en pignon**, avec des gaines traversant les combles non isolés et descendant au travers du plafond vers les pièces principales.
+
+#### Analyse critique
+
+| Critère | Évaluation |
+|---|---|
+| **Faisabilité technique** | ⚠️ Possible mais complexe — nécessite une prise d'air extérieure en toiture (chapeau + filtre), des gaines d'insufflation isolées dans les combles froids, et des bouches d'insufflation au plafond |
+| **Compatibilité VMC SF** | ❌ **Non standard** — une VMC simple flux n'a PAS de gaines d'insufflation. L'amenée d'air est passive (par dépression). Ajouter des gaines d'amenée en transformerait le concept en insufflation mécanique ou en double flux |
+| **Compatibilité DPE** | ❌ **Problématique** — le diagnostiqueur s'attend à des entrées d'air dans les menuiseries ou les murs, pas à un réseau d'insufflation. Un réseau d'amenée par le plafond correspondrait à une VMC double flux (enum_type_ventilation_id différent) |
+| **Condensation** | ⚠️ **Risque élevé** — l'air extérieur froid traversant les combles non isolés (T° proche extérieur) dans des gaines jusqu'aux pièces chaudes ne pose pas de problème de condensation à l'intérieur des gaines (air sec entrant), mais les gaines elles-mêmes seront froides et peuvent provoquer de la condensation sur leur surface extérieure dans les pièces chaudes si l'isolation est insuffisante |
+| **Intérêt réel** | ❌ **Faible** — aucun avantage par rapport aux entrées d'air en façade (solutions 1 et 2), complexité supérieure, et non conforme au schéma standard VMC SF |
+
+#### Utilité réelle des combles pour la VMC
+
+Les combles sont très utiles pour la VMC, mais **côté extraction, pas côté amenée** :
+
+| Utilisation des combles | Pour l'extraction ✅ | Pour l'amenée ❌ |
+|---|---|---|
+| **Caisson VMC** | ✅ Posé dans les combles (sur silent-blocs) | — |
+| **Gaines d'extraction** | ✅ Gaines isolées des bouches SDB/cuisine vers le caisson | — |
+| **Sortie d'air vicié** | ✅ Chapeau de toiture Ø125 pour le rejet | — |
+| **Prise d'air neuf** | — | ❌ Inutile : l'air neuf entre par les EA en façade |
+
+**→ Les combles servent pour le caisson et l'extraction. L'amenée d'air doit rester en façade (fenêtres ou murs).**
+
+### 20.7 Comparatif des solutions
+
+| Critère | Solution 1 : Fraisage dormant bois | Solution 2 : Traversée de mur | Solution 3 : Remplacement fenêtres | Solution 4 : Passage combles |
+|---|---|---|---|---|
+| **Coût matériel** | **115-185 €** ⭐ | 168-292 € | 2 545-4 100 € | ~300-500 € |
+| **Coût posé** | **235-425 €** ⭐ | 350-610 € | 2 545-4 100 € | 500-1 000 € |
+| **Difficulté DIY** | ⭐⭐ Moyenne | ⭐⭐⭐ Avancée | ❌ Pro obligatoire | ⭐⭐⭐ Avancée |
+| **Compatibilité DPE** | ✅ **Totale** | ✅ **Totale** | ✅ **Totale** | ❌ Non standard |
+| **Conformité DTU 68.3** | ✅ **Conforme** | ✅ **Conforme** | ✅ **Conforme** | ⚠️ Hors cadre SF |
+| **Impact fenêtres existantes** | Rainure dans le dormant | Aucun | Remplacement total | Aucun |
+| **Impact façade** | Grille petite (discrète) | Grille Ø100 visible | Changement fenêtres complet | Pas de percement façade |
+| **Accord copropriété** | ⚠️ Possible (grille ext.) | ⚠️ Probable (percement mur) | ⚠️ Probable (changement menuiseries) | ✅ Non (tout en combles/intérieur) |
+| **Gain DPE additionnel** | 0 (VMC déjà comptée) | 0 | **-16 EP/m²** (Uw 2,9→1,3) | 0 |
+| **Cohérence énergie** | ✅ Bonne | ✅ Bonne | ✅ **Excellente** | ❌ Incohérente |
+| **Réversibilité** | Rebouchable (bois + mastic) | Rebouchable (mousse + enduit) | Irréversible | Démontable |
+
+### 20.8 Impact sur le DPE — Rappel des chiffres
+
+L'ajout des entrées d'air ne modifie pas directement le calcul DPE par rapport aux scénarios déjà simulés. Son rôle est de **rendre la VMC hygro B recevable** par le diagnostiqueur :
+
+| Configuration | EP/m² | Classe | Commentaire |
+|---|---|---|---|
+| État actuel (pas de VMC, ouverture fenêtres) | 130 | C | Scénario 4 simulé |
+| Avec VMC hygro B + entrées d'air (sol. 1 ou 2) | **129** | **C** | Scénario 3 — la VMC est prise en compte |
+| Avec VMC + nouvelles fenêtres + EA intégrées (sol. 3) | **113** | **C** (proche B) | Scénario 5 — gain Uw + VMC |
+| Avec VMC + fenêtres + test infiltro q4pa ≤ 0,6 | **~93-102** | **B** | Combiné §19 — classe B atteignable |
+
+**Sans entrées d'air → la VMC est installée physiquement mais le DPE reste à « ventilation par ouverture fenêtres » = pas de gain du tout.**
+
+### 20.9 Recommandation
+
+#### 🏆 Recommandation principale : Solution 1 — Fraisage dormant bois
+
+Pour votre configuration (fenêtres battantes bois double vitrage, deux façades Ouest et Est, combles accessibles pour l'extraction) :
+
+**→ Fraiser le dormant bois des 3 à 4 fenêtres des pièces principales et y poser des entrées d'air Aereco EHA² hygroréglables.**
+
+| Paramètre | Valeur |
+|---|---|
+| **Nombre d'entrées d'air** | 3 minimum (2 salon Ouest + 1 chambre Est), idéal 4 |
+| **Modèle recommandé** | **Aereco EHA²** — référence du marché, compatible tous caissons SF |
+| **Coût matériel** | **75-120 €** (3-4 × Aereco EHA² à ~25-30 €) |
+| **Coût total avec pose** | **235-425 €** |
+| **Temps DIY** | ~1h30-2h par fenêtre (total : 5-8h) |
+| **Outillage** | Défonceuse avec guide parallèle **ou** scie sauteuse + lime |
+
+**Pourquoi cette solution :**
+
+1. **Le bois est le matériau parfait** pour l'usinage — les fabricants d'EA (Aereco, Aldes) conçoivent leurs gabarits spécifiquement pour les dormants bois
+2. **Coût 3× inférieur** à la traversée de mur, 20× inférieur au remplacement de fenêtres
+3. **Conforme DTU 68.3** et accepté par tous les diagnostiqueurs DPE
+4. **Cohérent avec l'économie d'énergie** : les entrées d'air hygroréglables s'ouvrent uniquement en cas de besoin (humidité), minimisant les déperditions thermiques supplémentaires
+5. **Les combles accessibles facilitent l'installation VMC complète** : caisson + gaines d'extraction en combles, entrées d'air en façade = système standard complet
+
+#### Alternative si refus de toucher aux fenêtres : Solution 2 — Traversée de mur
+
+Si le fraisage du dormant bois n'est pas souhaité (fenêtres patrimoniales, refus du risque) :
+
+- Percer 3-4 trous Ø100 mm dans les murs extérieurs (Ouest et Est), en partie haute près des fenêtres
+- Poser des manchons isolés + entrées d'air murales Aereco EHT ou Aldes BAM Hygro
+- **Surcoût : ~100-200 € de plus** par rapport à la solution 1
+- **Attention** : vérifier accord copropriété pour le percement de façade
+
+#### Ce qu'il NE faut PAS faire
+
+| ❌ Erreur | Pourquoi | Risque |
+|---|---|---|
+| Installer la VMC sans entrées d'air | Circuit aéraulique incomplet, dépression excessive | VMC non comptée dans le DPE + sifflements + courants d'air parasites |
+| Poser des entrées d'air auto-réglables avec un caisson hygro B | Système mixte = VMC « hygro A » et non « hygro B » | DPE classé différemment, gain légèrement moindre |
+| Passer l'amenée d'air par les combles (gaines) | Hors cadre VMC simple flux, non conforme DTU 68.3 | Diagnostiqueur peut refuser le classement VMC hygro B |
+| Compter sur les infiltrations naturelles | Les infiltrations ne sont pas des entrées d'air contrôlées | Le diagnostiqueur ne les assimile pas à des entrées d'air |
+| Ouvrir les fenêtres en oscillo-battant comme « entrée d'air » | Ce n'est pas une entrée d'air permanente au sens réglementaire | VMC non prise en compte dans le DPE |
+
+### 20.10 Synthèse budget — Entrées d'air dans le budget total VMC
+
+Mise à jour du tableau de coûts VMC du §13.5 en intégrant les entrées d'air :
+
+| Poste | Solution 1 (fraisage bois) | Solution 2 (murale) |
+|---|---|---|
+| Caisson Aldes EasyHome Hygro Compact Classic | 250-350 € | 250-350 € |
+| Gaines PVC souples isolées Ø80/125 (~8 m) | 80-120 € | 80-120 € |
+| Bouches hygro B extraction (cuisine + SDB) | 40-80 € | 40-80 € |
+| **Entrées d'air hygro B (3-4 pièces principales)** | **75-120 €** | **135-240 €** |
+| Sortie toiture (chapeau Ø125 + collerette) | 40-60 € | 40-60 € |
+| Matériel divers (colliers, scotch alu, mousse) | 20-30 € | 20-30 € |
+| **Total matériel VMC complète** | **505-760 €** | **565-880 €** |
+| Pose professionnelle (gaines + percements + EA) | 500-900 € | 600-1 000 € |
+| **Total VMC posée avec entrées d'air** | **~1 000-1 660 €** | **~1 165-1 880 €** |
+
+> **Comparaison avec §13.5** : le budget VMC estimé était de 970-1 530 €. Avec le détail des entrées d'air (solution 1, fraisage bois), le budget total est de **~1 000-1 660 €**, cohérent avec l'estimation initiale. La solution 2 (murale) ajoute ~150-250 € au budget.
