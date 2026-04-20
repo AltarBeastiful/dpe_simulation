@@ -2292,10 +2292,10 @@ Mise à jour du tableau de coûts VMC du §13.5 en intégrant les entrées d'air
 | **Économie annuelle** | -479 €/an vs gaz actuel (772 vs 1 251 €) |
 | **Coût travaux** | **4 800-7 200 €** tout compris |
 | | Radiateurs inertie ×4-5 : 1 400-2 200 € (cf. §4.1) |
-| | CET Atlantic Calypso 150L : 1 500-2 000 € posé (cf. §10) |
+| | CET Atlantic Calypso 150L : 1 500-2 000 € posé (cf. §12) |
 | | VMC hygro B + entrées d'air : 1 000-1 660 € (cf. §20.10) |
-| | Dépose gaz + plomberie : 600-1 000 € (cf. §9) |
-| | Abonnement EDF passage HP/HC 9 kVA : 300 € adapt. (cf. §12) |
+| | Dépose gaz + plomberie : 600-1 000 € (cf. §11) |
+| | Abonnement EDF passage HP/HC 9 kVA : 300 € adapt. (cf. §14) |
 | **ROI** | 4 800-7 200 € / 479 €/an = **10-15 ans** |
 | **Confort été** | ❌ Pas de climatisation. Problème sous combles (surchauffe été) |
 | **Confort hiver** | ✅ Chaleur douce inertie, régulation pièce par pièce, programmation |
@@ -2637,7 +2637,7 @@ Le DPE a un impact croissant sur les prix de vente depuis la loi Climat & Résil
 | 3 | S14 — Poêle granulés + fenêtres | 452 | Bois | Prix du bois le plus bas |
 | 4 | **S13 — Poêle granulés** | **475** | **Bois** | |
 | 5 | S10 — PAC air/air + fenêtres | 489 | Élec | |
-| 6 | **S9 — PAC air/air** | **515** | **Élec** | |
+| 6 | **S9 — PAC air/air** | **510** | **Élec** | |
 | 7 | S22 — PAC air/eau + enveloppe | 522 | Élec | |
 | 8 | S12 — PAC air/eau + fenêtres | 571 | Élec | |
 | 9 | S20 — Réno totale (élec inertie) | 655 | Élec | |
@@ -2735,7 +2735,7 @@ Le DPE a un impact croissant sur les prix de vente depuis la loi Climat & Résil
 │ S9 — PAC │ │ S13 — Poêle       │ │
 │ air/air  │ │ granulés + CET    │ │
 │ Classe A │ │ Classe B (106)    │ │
-│ (65)     │ │ Coût annuel le +  │ │
+│ (64)     │ │ Coût annuel le +  │ │
 │ 8 500-   │ │ bas (475 €/an)    │ │
 │ 13 500 € │ │ 6 500-10 500 €   │ │
 └──────────┘ └───────────────────┘ │

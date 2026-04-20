@@ -340,7 +340,7 @@ function setECSCETAirExt(dpe) {
   genecs.donnee_entree.enum_type_energie_id = "1";
   genecs.donnee_entree.enum_usage_generateur_id = "2";
   genecs.donnee_entree.enum_type_stockage_ecs_id = "2";
-  genecs.donnee_entree.volume_stockage = 100;
+  genecs.donnee_entree.volume_stockage = 150; // Atlantic Calypso 150L recommandé
   genecs.donnee_entree.position_volume_chauffe = 1;
   genecs.donnee_entree.position_volume_chauffe_stockage = 1;
   delete genecs.donnee_entree.reference_generateur_mixte;
@@ -366,7 +366,7 @@ function setECSCETAirExtrait(dpe) {
   genecs.donnee_entree.enum_type_energie_id = "1";
   genecs.donnee_entree.enum_usage_generateur_id = "2";
   genecs.donnee_entree.enum_type_stockage_ecs_id = "2";
-  genecs.donnee_entree.volume_stockage = 100;
+  genecs.donnee_entree.volume_stockage = 150; // 150L recommandé
   genecs.donnee_entree.position_volume_chauffe = 1;
   genecs.donnee_entree.position_volume_chauffe_stockage = 1;
   delete genecs.donnee_entree.reference_generateur_mixte;
