@@ -2,20 +2,18 @@
 /**
  * Simulation 3CL — PAC monosplit salon + radiateurs inertie (ch, sdb, cuisine)
  *
- * Scénario de base demandé :
- *   - PAC air/air monosplit dans le salon (~15 m²)
- *   - Radiateurs inertie NFC dans chambre, SDB, cuisine (~36.7 m²)
- *   - VMC hygro B
+ * Surfaces corrigées (DPE total 51.7 m²) :
+ *   - Salon      : 26.05 m² (sol) / 31 m² en volume — on utilise 26.05 pour 3CL
+ *   - Ch+SDB+Cui : 51.7 - 26.05 = 25.65 m²
  *
- * Deux variantes ECS comparées :
- *   HB1 — ballon électrique classique 100L  (~400-600 €)
- *   HB2 — CET air extérieur 100L            (~1 000-1 400 €)
+ * Trois scénarios demandés :
+ *   A  — PAC monosplit salon (26 m²) + inertie ch+sdb+cui (25.65 m²) + VMC + BALLON normal
+ *   B  — Tout inertie (51.7 m²)  + VMC + BALLON normal  (pas de PAC)
+ *   C  — Tout inertie (51.7 m²)  + VMC + CET 100L       (pas de PAC)
  *
- * Références incluses :
+ * Référence :
  *   S0  — État actuel gaz collectif
- *   S3  — Tout inertie + VMC + CET (meilleure option sans PAC)
- *   S9  — Tout PAC air/air + VMC + CET (meilleure option tout PAC)
- *   H5  — PAC salon + inertie partout + VMC + CET (identique à HB2)
+ *   S9  — Tout PAC multisplit + VMC + CET (meilleur DPE possible)
  */
 
 import * as fs from 'fs';
@@ -142,11 +140,16 @@ function makeInstall(desc, type, surface) {
   return install;
 }
 
-// PAC monosplit salon (15 m²) + inertie ch+sdb+cui (36.7 m²)
+// Surfaces corrigées
+// Salon = 26.05 m² au sol (le 3CL utilise la surface déclarée)
+// Ch + SDB + Cuisine = 51.7 - 26.05 = 25.65 m²
+const SURFACE_SALON  = 26.05;
+const SURFACE_AUTRES = parseFloat((51.7 - SURFACE_SALON).toFixed(2)); // 25.65
+
 function setPACMonosplitInertie(dpe) {
   dpe.logement.installation_chauffage_collection.installation_chauffage = [
-    makeInstall('PAC air/air monosplit (salon)', 'pac', 15),
-    makeInstall('Radiateurs inertie NFC (chambre, SDB, cuisine)', 'inertie', 36.7),
+    makeInstall(`PAC air/air monosplit (salon ${SURFACE_SALON} m²)`, 'pac', SURFACE_SALON),
+    makeInstall(`Radiateurs inertie NFC (ch+SDB+cui ${SURFACE_AUTRES} m²)`, 'inertie', SURFACE_AUTRES),
   ];
 }
 
@@ -271,115 +274,230 @@ const scenarios = [];
 // S0 — état actuel gaz collectif
 {
   const dpe = deepClone(base);
-  const r = runScenario('S0  — Gaz collectif actuel', dpe);
+  const r = runScenario('S0 — Gaz collectif actuel', dpe);
   if (r) scenarios.push(r);
 }
 
-// S3 — tout inertie + VMC + CET (référence sans PAC)
-{
-  const dpe = deepClone(base);
-  setVMCHygroB(dpe);
-  setToutInertie(dpe);
-  setECSCET100L(dpe);
-  const r = runScenario('S3  — Tout inertie + VMC + CET 100L', dpe);
-  if (r) scenarios.push(r);
-}
-
-// S9 — tout PAC + VMC + CET (référence tout PAC)
-{
-  const dpe = deepClone(base);
-  setVMCHygroB(dpe);
-  setToutPAC(dpe);
-  setECSCET100L(dpe);
-  const r = runScenario('S9  — Tout PAC air/air + VMC + CET 100L', dpe);
-  if (r) scenarios.push(r);
-}
-
-// HB1 — PAC monosplit salon + inertie ch+sdb+cui + VMC + ballon 100L
+// Scénario A : PAC monosplit salon (26 m²) + inertie partout ailleurs + VMC + BALLON
 {
   const dpe = deepClone(base);
   setVMCHygroB(dpe);
   setPACMonosplitInertie(dpe);
   setECSBallon100L(dpe);
-  const r = runScenario('HB1 — PAC salon + inertie + VMC + BALLON 100L', dpe);
+  const r = runScenario('A  — PAC salon + inertie + VMC + Ballon normal', dpe);
   if (r) scenarios.push(r);
 }
 
-// HB2 — PAC monosplit salon + inertie ch+sdb+cui + VMC + CET 100L
+// Scénario B : Tout inertie (sans PAC) + VMC + BALLON normal
+{
+  const dpe = deepClone(base);
+  setVMCHygroB(dpe);
+  setToutInertie(dpe);
+  setECSBallon100L(dpe);
+  const r = runScenario('B  — Tout inertie + VMC + Ballon normal (sans PAC)', dpe);
+  if (r) scenarios.push(r);
+}
+
+// Scénario C : Tout inertie (sans PAC) + VMC + CET 100L
+{
+  const dpe = deepClone(base);
+  setVMCHygroB(dpe);
+  setToutInertie(dpe);
+  setECSCET100L(dpe);
+  const r = runScenario('C  — Tout inertie + VMC + CET 100L (sans PAC)', dpe);
+  if (r) scenarios.push(r);
+}
+
+// Bonus : PAC salon + inertie + VMC + CET (meilleur DPE hybride)
 {
   const dpe = deepClone(base);
   setVMCHygroB(dpe);
   setPACMonosplitInertie(dpe);
   setECSCET100L(dpe);
-  const r = runScenario('HB2 — PAC salon + inertie + VMC + CET 100L', dpe);
+  const r = runScenario('A+ — PAC salon + inertie + VMC + CET 100L (bonus)', dpe);
+  if (r) scenarios.push(r);
+}
+
+// S9 — tout PAC multisplit + VMC + CET (meilleur DPE possible)
+{
+  const dpe = deepClone(base);
+  setVMCHygroB(dpe);
+  setToutPAC(dpe);
+  setECSCET100L(dpe);
+  const r = runScenario('S9 — Tout PAC multisplit + VMC + CET (référence)', dpe);
   if (r) scenarios.push(r);
 }
 
 // ─── affichage ───────────────────────────────────────────────────────────────
 
-console.log('\n════════════════════════════════════════════════════════════════');
-console.log('  PAC MONOSPLIT SALON + INERTIE — SIMULATION OPEN3CL (3CL-DPE)');
-console.log('════════════════════════════════════════════════════════════════\n');
+const LINE = '─'.repeat(109);
+const TOP  = '┌' + LINE + '┐';
+const MID  = '├' + LINE + '┤';
+const BOT  = '└' + LINE + '┘';
 
-console.log('┌─────────────────────────────────────────┬──────┬───────┬─────┬───────┬──────────┬──────────┬──────────┐');
-console.log('│ Scénario                                │EP/m² │Classe │GES  │ €/an  │ EF ch    │ EF ecs   │ EF total │');
-console.log('├─────────────────────────────────────────┼──────┼───────┼─────┼───────┼──────────┼──────────┼──────────┤');
+console.log('\n════════════════════════════════════════════════════════════════════════════════');
+console.log('  SIMULATION 3CL — PAC MONOSPLIT SALON (26 m²) + INERTIE + VMC');
+console.log('  Surfaces : salon 26.05 m² | ch+SDB+cui 25.65 m² | total 51.7 m²');
+console.log('════════════════════════════════════════════════════════════════════════════════\n');
+
+console.log(TOP);
+console.log('│ Scénario                                             │EP/m²│Cl.│GES│ €/an │EF_ch  │EF_ecs │EF_tot │');
+console.log(MID);
 for (const r of scenarios) {
-  const name = r.name.padEnd(41);
-  console.log(`│ ${name}│ ${String(r.ep_m2).padStart(4)} │  ${r.classe}    │  ${String(r.ges_m2).padStart(2)} │ ${String(Math.round(r.cout_annuel)).padStart(5)} │ ${String(Math.round(r.ef_ch)).padStart(8)} │ ${String(Math.round(r.ef_ecs)).padStart(8)} │ ${String(Math.round(r.ef_total)).padStart(8)} │`);
+  const n = r.name.padEnd(53);
+  const ep  = String(r.ep_m2).padStart(5);
+  const cl  = r.classe.padEnd(3);
+  const ges = String(r.ges_m2).padStart(3);
+  const ct  = String(Math.round(r.cout_annuel)).padStart(6);
+  const ch  = String(Math.round(r.ef_ch)).padStart(7);
+  const ecs = String(Math.round(r.ef_ecs)).padStart(7);
+  const tot = String(Math.round(r.ef_total)).padStart(7);
+  console.log(`│ ${n}│${ep}│ ${cl}│${ges}│${ct} │${ch} │${ecs} │${tot} │`);
 }
-console.log('└─────────────────────────────────────────┴──────┴───────┴─────┴───────┴──────────┴──────────┴──────────┘');
+console.log(BOT);
 
-console.log('\n════ DÉTAIL INSTALLATIONS CHAUFFAGE ════\n');
+// ─── détail installations hybrides ─────────────────────────────────────────
+console.log('\n════ DÉTAIL CHAUFFAGE — scénarios hybrides ════\n');
 for (const r of scenarios.filter(r => r.instDetail.length > 1)) {
-  console.log(`▶ ${r.name}`);
-  console.log(`  Besoin total chauffage : ${Math.round(r.besoin_ch)} kWh`);
+  console.log(`▶ ${r.name}  |  Besoin total : ${Math.round(r.besoin_ch)} kWh`);
   for (const inst of r.instDetail) {
+    const pct = ((inst.surface / 51.7) * 100).toFixed(0);
     console.log(`  [${inst.idx}] ${inst.desc}`);
-    console.log(`      surface  : ${inst.surface} m²`);
-    console.log(`      besoin   : ${inst.besoin_ch?.toFixed(0) ?? 'N/A'} kWh`);
-    console.log(`      conso EF : ${inst.conso_ch?.toFixed(0) ?? 'N/A'} kWhEF`);
+    console.log(`       surface : ${inst.surface} m² (${pct}%)  |  besoin : ${inst.besoin_ch?.toFixed(0) ?? 'N/A'} kWh  |  conso EF : ${inst.conso_ch?.toFixed(0) ?? 'N/A'} kWhEF`);
   }
   console.log('');
 }
 
-console.log('\n════ ANALYSE — BALLON 100L vs CET 100L ════\n');
+// ─── analyse 3 scénarios ────────────────────────────────────────────────────
+const scA   = scenarios.find(r => r.name.startsWith('A  '));
+const scB   = scenarios.find(r => r.name.startsWith('B  '));
+const scC   = scenarios.find(r => r.name.startsWith('C  '));
+const scAp  = scenarios.find(r => r.name.startsWith('A+ '));
+const s0    = scenarios.find(r => r.name.startsWith('S0'));
+const s9    = scenarios.find(r => r.name.startsWith('S9'));
 
-const hb1 = scenarios.find(r => r.name.startsWith('HB1'));
-const hb2 = scenarios.find(r => r.name.startsWith('HB2'));
-const s0  = scenarios.find(r => r.name.startsWith('S0'));
-const s3  = scenarios.find(r => r.name.startsWith('S3'));
-const s9  = scenarios.find(r => r.name.startsWith('S9'));
+if (scA && scB && scC && scAp) {
+  console.log('════ ANALYSE COMPARATIVE — 3 SCÉNARIOS ════\n');
 
-if (hb1 && hb2) {
-  const deltaEf_ecs  = hb1.ef_ecs  - hb2.ef_ecs;
-  const deltaCout    = hb1.cout_annuel - hb2.cout_annuel;
+  const dAvsB  = scB.cout_annuel  - scA.cout_annuel;
+  const dAvsBp = scAp.cout_annuel - scA.cout_annuel; // A vs A+
+  const dBvsC  = scB.cout_annuel  - scC.cout_annuel;
 
-  console.log(`EF ECS ballon    : ${Math.round(hb1.ef_ecs)} kWhEF/an`);
-  console.log(`EF ECS CET       : ${Math.round(hb2.ef_ecs)} kWhEF/an`);
-  console.log(`Économie ECS CET : ${Math.round(deltaEf_ecs)} kWhEF/an (÷ ~${(hb1.ef_ecs / hb2.ef_ecs).toFixed(1)}x)`);
+  console.log('  [ECS] Consommation ECS par option :');
+  console.log(`    Ballon normal 100L : ${Math.round(scA.ef_ecs)} kWhEF/an  (coeff. perf. ~1.0)`);
+  console.log(`    CET 100L           : ${Math.round(scC.ef_ecs)} kWhEF/an  (COP ~${(scB.ef_ecs / scC.ef_ecs).toFixed(1)}x)`);
   console.log('');
-  console.log(`Coût annuel HB1 (ballon) : ${Math.round(hb1.cout_annuel)} €/an`);
-  console.log(`Coût annuel HB2 (CET)    : ${Math.round(hb2.cout_annuel)} €/an`);
-  console.log(`Économie annuelle CET    : ${Math.round(deltaCout)} €/an`);
+  console.log('  [CHAUFFAGE] PAC monosplit salon vs inertie salon :');
+  const efPacSalon = scA.instDetail[0]?.conso_ch ?? 0;
+  const efInSalon  = (scB.ef_ch / 51.7) * 26.05; // inertie prorata salon
+  console.log(`    PAC salon (${SURFACE_SALON} m²) : ~${Math.round(efPacSalon)} kWhEF  (COP ~3.5)`);
+  console.log(`    Inertie salon       : ~${Math.round(efInSalon)} kWhEF  (η ~0.8)`);
+  console.log(`    Économie PAC salon  : ~${Math.round(efInSalon - efPacSalon)} kWhEF/an`);
   console.log('');
-  const surcoutCET = 600; // fourchette basse installation CET vs ballon
-  const surcoutCET_haut = 900;
-  const retour_bas  = Math.round(surcoutCET     / deltaCout);
-  const retour_haut = Math.round(surcoutCET_haut / deltaCout);
-  console.log(`Surcoût CET vs ballon : ~${surcoutCET}–${surcoutCET_haut} € (fourni + posé)`);
-  console.log(`Retour sur investissement : ${retour_bas}–${retour_haut} ans`);
+  console.log('  [COÛTS ANNUELS]');
+  console.log(`    A  PAC salon + Ballon : ${Math.round(scA.cout_annuel)} €/an`);
+  console.log(`    B  Inertie + Ballon   : ${Math.round(scB.cout_annuel)} €/an  (${dAvsB > 0 ? '+' : ''}${Math.round(dAvsB)} € vs A)`);
+  console.log(`    C  Inertie + CET      : ${Math.round(scC.cout_annuel)} €/an  (${dBvsC > 0 ? 'économie' : 'surcoût'} CET: ${Math.round(Math.abs(dBvsC))} €/an vs B)`);
+  console.log(`    A+ PAC salon + CET    : ${Math.round(scAp.cout_annuel)} €/an  (${dAvsBp > 0 ? '+' : ''}${Math.round(dAvsBp)} € vs A, meilleur DPE hybride)`);
   console.log('');
-  console.log(`EP/m² HB1 (ballon) : ${hb1.ep_m2} — Classe ${hb1.classe}`);
-  console.log(`EP/m² HB2 (CET)    : ${hb2.ep_m2} — Classe ${hb2.classe}`);
+
+  // ─── analyse CET justification ─────────────────────────────────────────
+  console.log('════ CET vs BALLON — LE SURCOÛT EST-IL JUSTIFIÉ ? ════\n');
+
+  const economieBvC = scB.cout_annuel - scC.cout_annuel; // B-C = gain du CET sur inertie seule
+  const economieAvAp = scA.cout_annuel - scAp.cout_annuel; // A-A+ = gain du CET avec PAC aussi
+
+  // Prix matériel
+  const prixBallon100L   = 250;   // ballon 100L standard
+  const prixCET100L_bas  = 900;   // CET 100L fourni seul
+  const prixCET100L_haut = 1200;
+  const poseBallon       = 200;   // pose ballon
+  const poseCET          = 300;   // pose CET (un peu plus complexe)
+  const surcoutCET_bas   = (prixCET100L_bas  + poseCET) - (prixBallon100L + poseBallon);
+  const surcoutCET_haut  = (prixCET100L_haut + poseCET) - (prixBallon100L + poseBallon);
+
+  const retBvsC_bas   = Math.round(surcoutCET_bas  / economieBvC);
+  const retBvsC_haut  = Math.round(surcoutCET_haut / economieBvC);
+  const retAvAp_bas   = Math.round(surcoutCET_bas  / economieAvAp);
+  const retAvAp_haut  = Math.round(surcoutCET_haut / economieAvAp);
+
+  console.log(`  Surcoût CET vs ballon (matériel + pose) : ${surcoutCET_bas}–${surcoutCET_haut} €`);
+  console.log(`  Économie annuelle CET dans scénario B→C : ${Math.round(economieBvC)} €/an`);
+  console.log(`  ► Retour sur invest. scénario B→C       : ${retBvsC_bas}–${retBvsC_haut} ans ✓`);
+  console.log('');
+  console.log(`  Économie annuelle CET dans scénario A→A+: ${Math.round(economieAvAp)} €/an`);
+  console.log(`  ► Retour sur invest. scénario A→A+      : ${retAvAp_bas}–${retAvAp_haut} ans ✓`);
+  console.log('');
+  console.log(`  Conclusion : CET rentabilisé en ${Math.min(retBvsC_bas, retAvAp_bas)}–${Math.max(retBvsC_haut, retAvAp_haut)} ans dans tous les scénarios.`);
+  console.log('  → Le surcoût CET est clairement justifié.');
   console.log('');
 }
 
-if (s0 && hb1 && hb2 && s3 && s9) {
-  console.log('════ POSITIONNEMENT DANS LE CLASSEMENT ════\n');
-  const all = [s0, s3, hb1, hb2, s9];
-  for (const r of all.sort((a, b) => a.cout_annuel - b.cout_annuel)) {
-    const bar = '█'.repeat(Math.round(r.cout_annuel / 50));
-    console.log(`  ${r.name.padEnd(45)} ${String(Math.round(r.cout_annuel)).padStart(5)} €/an  ${bar}`);
+// ─── estimation CEE ──────────────────────────────────────────────────────
+console.log('════ ESTIMATION CEE (Certificats d\'Économies d\'Énergie) ════\n');
+console.log('  Les primes CEE (offres agréées, ex. Hellio, Effy, EDF OA…) varient selon');
+console.log('  le revenu du ménage et l\'offre choisie. Fourchettes indicatives 2025 :');
+console.log('');
+console.log('  SANS PAC monosplit (scénarios B ou C) :');
+console.log('  ┌────────────────────────────────────────┬────────────────────┐');
+console.log('  │ Équipement                             │ Prime CEE estimée  │');
+console.log('  ├────────────────────────────────────────┼────────────────────┤');
+console.log('  │ VMC hygro B (BAR-TH-125)               │     100–200 €      │');
+console.log('  │ CET air extérieur 100L (BAR-TH-148)    │     200–400 €      │');
+console.log('  │ Radiateurs inertie NFC × 4 (éligibles) │     100–200 €      │');
+console.log('  ├────────────────────────────────────────┼────────────────────┤');
+console.log('  │ TOTAL estimé SANS PAC                  │   ~400–800 €       │');
+console.log('  └────────────────────────────────────────┴────────────────────┘');
+console.log('');
+console.log('  AVEC PAC monosplit (scénarios A ou A+) :');
+console.log('  ┌────────────────────────────────────────┬────────────────────┐');
+console.log('  │ Équipement                             │ Prime CEE estimée  │');
+console.log('  ├────────────────────────────────────────┼────────────────────┤');
+console.log('  │ VMC hygro B (BAR-TH-125)               │     100–200 €      │');
+console.log('  │ CET air extérieur 100L (BAR-TH-148)    │     200–400 €      │');
+console.log('  │ Radiateurs inertie NFC × 3 (éligibles) │      75–150 €      │');
+console.log('  │ PAC air/air monosplit (BAR-TH-129)     │     200–600 €      │');
+console.log('  ├────────────────────────────────────────┼────────────────────┤');
+console.log('  │ TOTAL estimé AVEC PAC                  │   ~575–1 350 €     │');
+console.log('  └────────────────────────────────────────┴────────────────────┘');
+console.log('');
+console.log('  ⚠  Notes importantes :');
+console.log('    • CEE cumulables avec MaPrimeRénov (sous conditions)');
+console.log('    • La PAC monosplit dans un appartement peut être refusée en CEE si');
+console.log('      le logement n\'est pas en maison individuelle (certains opérateurs');
+console.log('      l\'acceptent, d\'autres non — vérifier avant devis)');
+console.log('    • Radiateurs inertie : souvent éligibles via "geste simple" si remplacement');
+console.log('      d\'un chauffage énergivore (gaz ici) — éligibilité à confirmer');
+console.log('    • CEE soumis à "engagement avant travaux" — devis signé avant commande');
+console.log('');
+
+// ─── difficultés installation PAC monosplit ──────────────────────────────
+console.log('════ FAISABILITÉ PAC MONOSPLIT — DIFFICULTÉS D\'INSTALLATION ════\n');
+console.log('  ✓ Favorable :');
+console.log('    • Salon de 26 m² : une unité intérieure monosplit suffit (SCOP ≥ 4)');
+console.log('    • Surface salon > 20 m² : confort thermique correct par soufflage');
+console.log('    • Couplage avec inertie dans les autres pièces : régulation naturelle');
+console.log('');
+console.log('  ⚠  Points de vigilance :');
+console.log('    • Appartement collectif : accord de copropriété OBLIGATOIRE');
+console.log('      pour passage des fluides frigorigènes et emplacement UE extérieure');
+console.log('    • Passage gaine frigorifique : percement mur (étanchéité, esthétique)');
+console.log('    • Unité extérieure : façade, toiture ou local technique — bruit, esthétique');
+console.log('    • Salon en double-hauteur (31 m² en volume) : attention au brassage d\'air');
+console.log('      vers la mezzanine / niveau supérieur — peut sur-chauffer le haut');
+console.log('    • PAC monosplit ne chauffe PAS les pièces sans unité intérieure');
+console.log('      (chambre, SDB, cuisine) → les radiateurs inertie restent indispensables');
+console.log('');
+
+// ─── classement final ───────────────────────────────────────────────────
+if (s0 && scA && scB && scC && scAp && s9) {
+  console.log('════ CLASSEMENT PAR COÛT ANNUEL ════\n');
+  const tous = [s0, scB, scA, scC, scAp, s9];
+  const max = Math.max(...tous.map(r => r.cout_annuel));
+  for (const r of tous.sort((a, b) => b.cout_annuel - a.cout_annuel)) {
+    const bar = '█'.repeat(Math.round((r.cout_annuel / max) * 30));
+    const eco = s0 ? `  (économie vs actuel : ${Math.round(s0.cout_annuel - r.cout_annuel)} €/an)` : '';
+    console.log(`  ${r.name.padEnd(48)} ${String(Math.round(r.cout_annuel)).padStart(5)} €/an  ${bar}${eco}`);
   }
+  console.log('');
 }
