@@ -77,13 +77,19 @@ node run_one_dpe.js dpe_current.json
 - 9 = CET sur air extrait après 2014
 - 30 = ballon électrique vertical catégorie B
 
-## Note coefficient 2026
+## Note coefficient 2026 et Plan d'électrification des usages
 
-Open3CL utilise le coefficient EP de 2,3 (avant 2026). Pour obtenir le résultat DPE 2026, appliquez manuellement le coefficient 1,9 aux consommations électriques :
+**Open3CL v1.4+ utilise déjà le coefficient EP de 1,9** (nouveau coefficient officiel, confirmé par le Plan d'électrification des usages — voir [economie.gouv.fr](https://www.economie.gouv.fr/actualites/presentation-du-plan-delectrification-des-usages)). Les résultats de ce dépôt sont donc **directement conformes au DPE 2026** — aucune correction manuelle n'est nécessaire.
 
+Vérification sur les données `renovation_results.json` (scénario S3, tout électrique) :
 ```
-EP_2026 = énergie_finale_élec × 1,9 + énergie_finale_gaz × 1
+ep_ch / ef_ch = 5 038 / 2 652 = 1,900  ✓
+ep_ecs / ef_ecs = 959 / 505 = 1,900    ✓
 ```
+
+L'ancienne formule manuelle `EP_2026 = EF_élec × 1,9` était un contournement, désormais inutile.
+
+> ⚠️ Note historique : une version antérieure de ce README indiquait que l'engine utilisait 2,3. C'était inexact pour la version @open3cl/engine ^1.4.x installée.
 
 ## Crédits
 

@@ -22,6 +22,30 @@
 
 ---
 
+> ## 🔴 Actualisation — Plan d'électrification des usages (2025)
+>
+> Le gouvernement a présenté le **Plan d'électrification des usages** ([economie.gouv.fr](https://www.economie.gouv.fr/actualites/presentation-du-plan-delectrification-des-usages)) avec plusieurs mesures qui **renforcent directement l'intérêt des scénarios proposés dans ce guide**.
+>
+> ### Ce qui change pour ce logement
+>
+> | Mesure | Impact | Scénario concerné |
+> |---|---|---|
+> | **Coefficient EP électricité = 1,9 officiel** (déjà dans Open3CL 1.4+) | DPE déjà calculé en 2026 — aucune correction nécessaire | Tous |
+> | **PAC air/air éligible MaPrimeRénov' (bailleurs)** | Nouveau : −1 000 à −2 500 € sur le coût net du S9 | S9, S10, S21, S23 |
+> | **Bonus "sortie des énergies fossiles" renforcé** | −500 à −1 000 € supplémentaires pour toute déconnexion du gaz | S3, S9, S21 |
+> | **Objectif 1 million PAC/an → CEE PAC renforcés** | Primes CEE en hausse pour les PAC | S9, S11 |
+>
+> ### Impacts sur les budgets nets (voir §7 et §3 pour le détail)
+>
+> | Stratégie | Budget net avant plan | Budget net après plan | ROI avant | ROI après |
+> |---|---|---|---|---|
+> | **S3 — Inertie + CET** | 5 650–7 050 € | **~4 500–6 000 €** | 10–15 ans | **8–12 ans** |
+> | **S9 — PAC air/air** | 6 500–11 500 € | **~4 000–9 000 €** | 11–18 ans | **7–13 ans** |
+>
+> 💡 **Conséquence clé** : la PAC air/air (S9) devient financièrement plus compétitive vs l'inertie (S3). Le ROI attendu des deux stratégies converge vers 8–13 ans.
+
+---
+
 ## 1. Résumé exécutif
 
 ### Le logement
@@ -65,8 +89,9 @@
 | **GES** | 2 g/m² — **Classe A** |
 | **Facture estimée** | 510 €/an (3CL) · ~665 €/an (tarifs réels 2025) |
 | **Économie annuelle** | ~741 €/an (3CL) · ~1 000 €/an réelle |
-| **Budget** | **8 500 – 13 500 €** |
-| **ROI** | **11 – 18 ans** |
+| **Budget brut** | **8 500 – 13 500 €** |
+| **Budget net (après aides, avec plan d'électrification)** | **~4 000 – 9 000 €** ↓ |
+| **ROI** | **7 – 13 ans** ↓ (vs 11–18 ans avant le plan) |
 | **Plus-value revente estimée** | +33 000 à +60 000 € (passage D→A) |
 | **Bonus** | Climatisation réversible — critique sous combles |
 
@@ -75,8 +100,10 @@
 ```
 Accord copropriété pour unité extérieure PAC ?
 ├── OUI + Budget > 8 500 €  →  S9 — PAC air/air — Classe A (64 EP/m²)
+│                               [MPR PAC air/air + bonus fossiles → net ~4 000–9 000 €]
 ├── OUI + Budget < 8 500 €  →  S3 — Inertie + CET — Classe C (127 EP/m²)
 └── NON                      →  S3 — Inertie + CET — Classe C (127 EP/m²)
+                                [bonus fossiles → net ~4 500–6 000 €]
 ```
 
 ---
@@ -165,9 +192,10 @@ Toutes les stratégies incluent le socle commun : **déconnexion du gaz collecti
 | **Facture 3CL** | 764 €/an | 510 €/an | 440 €/an |
 | **Facture réelle (2025)** | ~960–1 000 €/an | ~665 €/an | ~590 €/an |
 | **Budget brut** | 7 700–9 000 € | 8 500–13 500 € | 14 000–22 000 € |
-| **Budget net (aides)** | 5 650–7 050 € | 6 500–11 500 € | 12 000–20 000 € |
+| **Budget net (aides 2025)** | ~5 650–7 050 € | ~6 500–11 500 € | ~12 000–20 000 € |
+| **Budget net (plan élec.)** | **~4 500–6 000 €** ↓ | **~4 000–9 000 €** ↓ | **~10 000–18 000 €** ↓ |
 | **Économie/an vs actuel** | 487 €/an | 741 €/an | 811 €/an |
-| **ROI** | 10–15 ans | 11–18 ans | 15–25 ans |
+| **ROI (plan élec.)** | **8–12 ans** | **7–13 ans** | **13–22 ans** |
 | **Plus-value revente** | +15 000 à +30 000 € | +33 000 à +60 000 € | +33 000 à +60 000 € |
 | **Clim été** | ❌ | ✅ | ✅ |
 | **Accord copro** | ✅ Non nécessaire | ⚠️ Nécessaire (UE PAC) | ⚠️ Nécessaire |
@@ -180,10 +208,11 @@ Toutes les stratégies incluent le socle commun : **déconnexion du gaz collecti
 - Objectif : sortir du D rapidement avec un excellent ROI
 
 **Stratégie 2 (Optimale)** — **RECOMMANDÉE** si :
-- Budget 8 500–13 500 € disponible
+- Budget 8 500–13 500 € disponible (net ~4 000–9 000 € avec aides plan élec.)
 - Copropriété accepte l'unité extérieure
 - Objectif : classe A + climatisation sous combles + valorisation maximale
 - Le surcoût de ~4 000 € vs S1 rapporte +18 000–30 000 € en plus-value revente
+- Depuis le Plan d'électrification : ROI amélioré à **7–13 ans** (vs 11–18 ans auparavant)
 
 **Stratégie 3 (Budget max)** seulement si :
 - Budget > 14 000 € et objectif confort maximal long terme
@@ -567,8 +596,10 @@ Le DPE surestime la consommation du ventilateur VMC d'un **facteur ×2** (227 kW
 | Lot 5 | VMC — Aldes EasyHome + gaines + pose | **1 150–1 450 €** |
 | Lot 6 | Divers | **70 €** |
 | **TOTAL BRUT TTC** | | **7 700–9 000 €** |
-| **Aides (estimation)** | MaPrimeRénov' + CEE + TVA 10% | **−1 950 à −2 050 €** |
-| **TOTAL NET ESTIMÉ** | | **5 650–7 050 €** |
+| **Aides avant plan** | MaPrimeRénov' CET + CEE + TVA 10% | **−1 950 à −2 050 €** |
+| **TOTAL NET (avant plan)** | | **5 650–7 050 €** |
+| **Aides plan élec.** | + Bonus sortie fossiles (nouveau) | **−500 à −1 000 €** |
+| **TOTAL NET ESTIMÉ (plan élec.)** | | **~4 500–6 000 €** |
 
 ### Variantes
 
@@ -584,19 +615,37 @@ Le DPE surestime la consommation du ventilateur VMC d'un **facteur ×2** (227 kW
 
 ## 7. Aides financières et fiscalité
 
-### 7.1 Récapitulatif des aides
+> **Mise à jour Plan d'électrification des usages (2025)** : les aides ci-dessous intègrent les nouvelles mesures du plan gouvernemental. Vérifier les montants exacts sur [maprimerenov.gouv.fr](https://www.maprimerenov.gouv.fr) avant de déposer votre dossier.
+
+### 7.1 Récapitulatif des aides — Stratégie 1 (S3 — Inertie + CET)
 
 | Aide | Équipement | Montant estimé | Condition |
 |---|---|---|---|
-| **MaPrimeRénov' Décarbonation** (bailleur) | CET remplaçant chauffe-eau gaz | 400–1 200 € | Artisan **RGE**, logement > 15 ans |
+| **MaPrimeRénov' Parcours par Geste** (bailleur) | CET remplaçant chauffe-eau gaz collectif | 400–1 200 € | Artisan **RGE**, logement > 15 ans |
+| **Bonus "Sortie des énergies fossiles"** *(nouveau)* | Déconnexion du gaz collectif | 500–1 000 € | Applicable si remplacement d'un chauffage fossile par solution électrique |
 | **CEE** — BAR-TH-158 | 5 radiateurs NFC | 250–750 € | Radiateurs connectés/NFC |
 | **CEE** — BAR-TH-148 | CET | 80–200 € | — |
 | **TVA réduite 10 %** | Matériel + pose par pro | ~500–600 € | Artisan professionnel, logement > 2 ans |
-| **Total aides** | | **1 230–2 750 €** | |
+| **Total aides S3** | | **1 730–3 750 €** | |
+| **Budget net S3 (plan élec.)** | | **~4 500–6 000 €** | (sur brut 7 700–9 000 €) |
 
-> ⚠️ Les radiateurs électriques ne sont PAS éligibles à MaPrimeRénov' (pas considérés ENR). Seul le CET est éligible.
+> ⚠️ Les radiateurs électriques à inertie ne sont **pas** éligibles à MaPrimeRénov' en tant que système de chauffage (pas considérés ENR). Le CET et le bonus "sortie fossiles" sont les seules aides MaPrimeRénov' disponibles pour S3.
 
-### 7.2 Procédure CEE
+### 7.2 Récapitulatif des aides — Stratégie 2 (S9 — PAC air/air)
+
+| Aide | Équipement | Montant estimé | Condition |
+|---|---|---|---|
+| **MaPrimeRénov' Parcours par Geste** (bailleur) | CET remplaçant chauffe-eau gaz | 400–1 200 € | Artisan **RGE**, logement > 15 ans |
+| **MaPrimeRénov' PAC air/air** *(nouveau — plan élec.)* | PAC air/air multisplit 5 kW | 1 000–2 500 € | Bailleur + artisan RGE certifié ; PAC air/air désormais éligible grâce au plan d'électrification |
+| **Bonus "Sortie des énergies fossiles"** *(nouveau)* | Déconnexion du gaz collectif | 500–1 000 € | Idem S3 |
+| **CEE** — PAC air/air + CET | PAC + CET | 250–600 € | Opérations CEE renforcées (objectif 1M PAC/an) |
+| **TVA réduite 10 %** | Matériel + pose par pro | ~800–1 350 € | Artisan professionnel |
+| **Total aides S9** | | **2 950–6 650 €** | |
+| **Budget net S9 (plan élec.)** | | **~4 000–9 000 €** | (sur brut 8 500–13 500 €) |
+
+> 💡 **Nouveauté clé** : L'éligibilité de la PAC air/air à MaPrimeRénov' (annoncée dans le plan d'électrification) réduit significativement le reste à charge du S9 et **rapproche son ROI (7–13 ans) de celui du S3 (8–12 ans)**, tout en donnant la classe A et la climatisation.
+
+### 7.3 Procédure CEE
 
 1. **Avant les travaux** : s'inscrire sur une plateforme CEE (PrimesEnergie, Effy, TotalEnergies) et obtenir une offre
 2. **Ne pas signer de devis** avant d'avoir reçu la confirmation CEE
@@ -604,7 +653,7 @@ Le DPE surestime la consommation du ventilateur VMC d'un **facteur ×2** (227 kW
 4. Envoyer les factures à la plateforme CEE
 5. Recevoir le virement sous 4–8 semaines
 
-### 7.3 Abonnement EDF
+### 7.4 Abonnement EDF
 
 | | Base | HC/HP (recommandé) |
 |---|---|---|
@@ -849,13 +898,14 @@ Si la PAC n'est installée que dans certaines pièces (stratégie 2 étapes ou c
 
 | | Étape 1 seule (S3) | 2 étapes (H1) | Direct (S9) |
 |---|---|---|---|
-| Investissement | 4 600–8 000 € | 9 600–16 000 € | 8 500–13 500 € |
+| Investissement brut | 7 700–9 000 € | 13 600–18 500 € | 8 500–13 500 € |
+| Investissement net (plan élec.) | **~4 500–6 000 €** | ~10 000–16 000 € | **~4 000–9 000 €** |
 | DPE | 127 — C | 85 — B | 64 — A |
 | Facture 3CL | 764 €/an | 671 €/an | 510 €/an |
-| ROI global | 9–16 ans | 20–33 ans | 12–20 ans |
+| ROI global (plan élec.) | **8–12 ans** | 20–33 ans | **7–13 ans** |
 | Gaspillage (rads remplacés) | 0 € | 600–1 200 € | 0 € |
 
-**Verdict** : la stratégie 2 étapes a du sens **uniquement si le budget initial est < 8 000 €**. Si > 8 500 € disponibles, aller directement en S9 (A) coûte moins cher au total et donne un meilleur DPE. L'étape 2 seule (ajout PAC) a un ROI de 54–86 ans — elle ne se justifie que pour le confort (clim été) ou la plus-value revente.
+**Verdict mis à jour (plan d'électrification)** : grâce aux nouvelles aides, les deux stratégies directes (S3 et S9) ont des ROI similaires. La stratégie 2 étapes **n'a jamais de sens**. Si le budget brut est > 8 500 €, **aller directement en S9 (A)** est désormais encore plus attractif financièrement qu'avant le plan. L'étape 2 seule (ajout PAC) a un ROI de 40–70 ans — elle ne se justifie que pour le confort (clim été) ou la plus-value revente.
 
 ---
 
@@ -923,8 +973,8 @@ La PAC air/eau est pénalisée en 3CL par trois facteurs cumulatifs : SCOP infé
 
 | Passage DPE | Plus-value brute estimée (51,7 m², Strasbourg) | Coût travaux | Plus-value nette |
 |---|---|---|---|
-| D → C (S3) | +15 000 à +30 000 € | 5 650–7 050 € (net) | **+8 000 à +25 000 €** |
-| D → A (S9) | +33 000 à +60 000 € | 6 500–11 500 € (net) | **+20 000 à +50 000 €** |
+| D → C (S3) | +15 000 à +30 000 € | ~4 500–6 000 € (net, plan élec.) | **+9 000 à +26 000 €** |
+| D → A (S9) | +33 000 à +60 000 € | ~4 000–9 000 € (net, plan élec.) | **+24 000 à +56 000 €** |
 
 ---
 
@@ -955,7 +1005,7 @@ La PAC air/eau est pénalisée en 3CL par trois facteurs cumulatifs : SCOP infé
 ### Après les travaux
 
 - [ ] Travaux DIY étanchéité (joints fenêtres, mousse, membranes) — 130–170 €, 1 jour
-- [ ] Dossier MaPrimeRénov' en ligne (CET uniquement)
+- [ ] Dossier MaPrimeRénov' en ligne (CET + bonus sortie fossiles pour S3 ; CET + PAC air/air pour S9)
 - [ ] Envoi factures à la plateforme CEE
 - [ ] Locataire : changement 9 kVA HC/HP sur espace client EDF
 - [ ] Résiliation/recalcul charges gaz copropriété
@@ -963,4 +1013,4 @@ La PAC air/eau est pénalisée en 3CL par trois facteurs cumulatifs : SCOP infé
 
 ---
 
-*Document généré à partir de 24 simulations Open3CL + 7 scénarios hybrides, données DPE réelles extraites du XML 2567E2792599K, tarifs 2025, prix marché Strasbourg.*
+*Document généré à partir de 24 simulations Open3CL + 7 scénarios hybrides, données DPE réelles extraites du XML 2567E2792599K, tarifs 2025, prix marché Strasbourg. Mis à jour le 2026-04-29 pour intégrer les mesures du Plan d'électrification des usages ([economie.gouv.fr](https://www.economie.gouv.fr/actualites/presentation-du-plan-delectrification-des-usages)) : coefficient EP 1,9 confirmé, éligibilité MPR PAC air/air, bonus sortie des énergies fossiles.*
