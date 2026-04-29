@@ -229,9 +229,10 @@ Si budget serré, l'inertie fluide Sauter est le meilleur compromis. Le Orosi ut
 
 - **Alimentation électrique** : vérifier que le tableau supporte 5 500 W de chauffage + CET (~300 W). Il faut 3 circuits dédiés 20A (max 4 500 W par circuit, norme NF C 15-100). Voir §10.2 pour l'architecture détaillée.
 - **Fil pilote** : si votre installation a déjà des fils pilotes, les modèles connectés WiFi en profitent aussi. Sinon, le WiFi suffit.
-- **CEE** : les radiateurs NFC ouvrent droit à la prime CEE "coup de pouce chauffage" (~100-150€ de prime par radiateur remplacé, selon votre fournisseur d'énergie).
+- **CEE** : les radiateurs NFC ouvrent droit à la prime CEE "coup de pouce chauffage" (~100-150€ de prime par radiateur remplacé, selon votre fournisseur d'énergie). Les primes CEE sont renforcées dans le cadre du Plan d'électrification des usages (objectif 1M PAC/an → augmentation du volume de certificats).
 - **TVA** : 10% si pose par un professionnel (logement > 2 ans), 20% si achat seul.
 - **Pose** : compter 1h30–2h par radiateur pour un électricien. Prévoir une journée entière pour les 5.
+- **Bonus sortie fossiles (nouveau)** : si ces radiateurs remplacent un chauffage gaz collectif, un bonus "sortie des énergies fossiles" de 500–1 000 € peut s'ajouter via MaPrimeRénov' (plan d'électrification 2025).
 
 > ⚠️ Les prix indiqués sont des estimations basées sur les tarifs constatés en 2025-2026. Les prix varient selon les revendeurs et les promotions. Vérifiez les prix actuels via les liens fournis.
 
