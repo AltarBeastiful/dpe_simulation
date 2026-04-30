@@ -19,6 +19,7 @@
 11. [Annexe A — Tableau des 24 scénarios simulés](#annexe-a--tableau-des-24-scénarios-simulés)
 12. [Annexe B — Scénarios hybrides PAC + inertie](#annexe-b--scénarios-hybrides-pac--inertie)
 13. [Annexe C — Solutions écartées et pièges à éviter](#annexe-c--solutions-écartées-et-pièges-à-éviter)
+14. [Annexe D — PAC eau/eau géothermique — Propriété complète (4 logements, 292 m²)](#annexe-d--pac-eaueau-géothermique--simulation-pour-la-propriété-complète-4-logements-292-m)
 
 ---
 
@@ -964,3 +965,420 @@ La PAC air/eau est pénalisée en 3CL par trois facteurs cumulatifs : SCOP infé
 ---
 
 *Document généré à partir de 24 simulations Open3CL + 7 scénarios hybrides, données DPE réelles extraites du XML 2567E2792599K, tarifs 2025, prix marché Strasbourg.*
+
+---
+
+## Annexe D — PAC eau/eau géothermique — Simulation pour la propriété complète (4 logements, 292 m²)
+
+> **Contexte** : cette annexe simule l'installation d'une PAC eau/eau géothermique comme système de chauffage collectif pour les 4 logements de la propriété. Deux variantes sont comparées : **G1** (réutilisation du réseau bitube et des radiateurs existants) et **G2** (installation complète avec canalisations pré-isolées et radiateurs basse température neufs). Les calculs reprennent la méthode 3CL-DPE 2021 appliquée à la propriété étendue.
+
+---
+
+### D.1 Description de la propriété et configuration des bâtiments
+
+| | Bâtiment A (petit) | Bâtiment B (grand) |
+|---|---|---|
+| **Logements** | T3 — 51 m² (étudié) + T3 — 66 m² | T4 — 87 m² + T4 — 88 m² |
+| **Surface totale** | **117 m²** | **175 m²** |
+| **Étages** | 2 niveaux (1 logement/étage) | 2 niveaux (1 logement/étage) |
+| **Particularités** | Jardin accessible attenant | Cave (local technique) au sous-sol |
+| **Distance entre bâtiments** | **8 m** (tranchée inter-bâtiments nécessaire) | — |
+| **Distance cave → jardin** | — | **~20 m** (mesurée depuis la cave) |
+| **Surface totale chauffée** | **292 m²** | |
+
+**Logique de l'installation :**
+
+```
+[JARDIN]──sondes géo (5 × 120 m)
+    │
+    └─[Bât. A — petit]─────8 m────[Bât. B — grand]
+       T3 51 m² (R+1)              T4 88 m² (RDC)
+       T3 66 m² (RDC)              T4 87 m² (R+1)
+                                   [CAVE — PAC 25 kW + ballon tampon]
+```
+
+La PAC est installée dans la **cave du bâtiment B** (local technique sec et protégé, idéal). Les sondes géothermiques sont forées dans le **jardin attenant au bâtiment A**. Un réseau de canalisations relie les deux bâtiments en souterrain sur 8 m.
+
+---
+
+### D.2 Calcul DPE 3CL — Méthode et hypothèses
+
+#### Données thermiques de référence (T3, 51,7 m²)
+
+Le DPE réel de l'appartement T3 donne les paramètres suivants (calculés par Open3CL) :
+
+| Paramètre | Valeur | Source |
+|---|---|---|
+| GV (avec VMC hygro B) | **143 W/K** | Open3CL, section 2.1 |
+| Besoin thermique de chauffage (Bch) | **≈ 2 010 kWh_th/an** | Déduit de S9 (PAC air/air, SCOP=3,0) |
+| DJU zone H1b (Strasbourg) | **2 600 °C·j** | Méthode 3CL |
+| Puissance de pointe à −15 °C | **≈ 4 900 W** | GV × (19 − (−15)) = 143 × 34 |
+
+#### Extrapolation aux 4 logements
+
+Les 4 logements sont supposés de construction similaire (même époque, même zone climatique H1b). Le besoin par m² est déduit du T3, les murs mitoyens entre logements ayant déjà un coefficient de réduction b = 0 dans le calcul 3CL de référence.
+
+| Logement | Surface | Bch estimé | Puissance pointe |
+|---|---|---|---|
+| T3 — 51 m² (référence) | 51,7 m² | 2 010 kWh_th | 4 900 W |
+| T3 — 66 m² | 66,0 m² | 2 566 kWh_th | 6 260 W |
+| T4 — 87 m² | 87,0 m² | 3 381 kWh_th | 8 250 W |
+| T4 — 88 m² | 88,0 m² | 3 420 kWh_th | 8 350 W |
+| **TOTAL** | **292,7 m²** | **11 377 kWh_th/an** | **≈ 27 760 W** |
+
+> **Dimensionnement PAC** : puissance nominale requise **25–28 kW**. Avec une PAC de 25 kW, le backup résistif n'intervient que pour les températures < −12 °C (représentant < 3 % du temps de chauffe annuel à Strasbourg).
+
+#### Paramètres 3CL pour la PAC géothermique eau/eau
+
+| Paramètre | G1 (réseau existant) | G2 (installation neuve) |
+|---|---|---|
+| **SCOP forfaitaire 3CL** | **3,5** | **3,5** |
+| **Température départ réseau** | 55–60 °C (contrainte radiateurs existants) | 40–45 °C (radiateurs BT neufs) |
+| **SCOP réel estimé** | 2,8–3,2 (pénalité haute temp.) | 4,0–4,5 (basse temp. optimale) |
+| **rd — rendement distribution** | 0,90 (réseau existant, non-isolé, long) | 0,95 (canalisations pré-isolées neuves) |
+| **re — rendement émission** | 0,97 (radiateurs eau existants) | 0,98 (radiateurs panel BT neufs, surdimensionnés) |
+| **Auxiliaires (circulateurs)** | +230 kWh EP/an par logement (réseau long, pompes actuelles) | +60 kWh EP/an par logement (pompes ECM modernes) |
+
+> **Note 3CL** : la méthode 3CL applique un SCOP forfaitaire de **3,5** pour une PAC géothermique eau/eau en zone H1, indépendamment de la température de départ. L'avantage réel de G2 (basse température) apparaît donc davantage sur la **facture réelle** et la **durée de vie** de l'équipement que sur l'étiquette DPE.
+
+---
+
+### D.3 Scénario G1 — PAC géothermique + réutilisation du réseau et des radiateurs existants
+
+**Principe** : la PAC remplace la chaudière gaz collective. Le réseau bitube existant et les radiateurs eau chaude de chaque appartement sont conservés. La PAC fonctionne à 55–60 °C pour maintenir une puissance suffisante aux radiateurs existants.
+
+#### Compatibilité radiateurs existants à température réduite
+
+Les radiateurs dimensionnés pour 70/55 °C (système gaz) délivrent à 55/45 °C (PAC) :
+
+| Température départ/retour | Puissance relative | Commentaire |
+|---|---|---|
+| 70 °C / 55 °C (nominal gaz) | 100 % | Référence |
+| 60 °C / 45 °C | ~74 % | PAC haute temp. — borderline |
+| 55 °C / 40 °C | ~63 % | Nécessite radiateurs surdimensionnés |
+| 45 °C / 35 °C (optimal géo) | ~41 % | **Incompatible** sans remplacement |
+
+> ⚠️ **Condition impérative pour G1** : les radiateurs existants doivent être surdimensionnés d'au moins **1,6×** les besoins réels pour fonctionner à 55 °C. C'est fréquent dans les immeubles 1990–2000 où les installateurs prévoyaient une marge de sécurité, mais doit être vérifié pièce par pièce avec un bilan thermique.
+
+#### Calcul DPE 3CL — Scénario G1 (par logement de 51,7 m²)
+
+| Poste | kWh EF/an | kWh EP/an | Détail |
+|---|---|---|---|
+| **Chauffage (PAC géo)** | **644** | **1 481** | Bch=2 010 / (SCOP 3,5 × rd 0,90 × re 0,97) |
+| **Auxiliaires** (circ. + VMC) | **187** | **430** | Circulateur collectif share + VMC hygro B |
+| **ECS** (CET individuel 150L) | **505** | **1 162** | COP CET = 2,5 (inchangé) |
+| **Éclairage** | **164** | **378** | Conventionnel 3CL |
+| **Total** | **1 500** | **3 451** | |
+| **EP/m²** | | **≈ 67 EP/m²** | **→ Classe A** |
+| **EP/m² (coeff. 2026 × 1,9)** | | **≈ 55 EP/m²** | **→ Classe A** |
+
+**Facture annuelle estimée (51,7 m²) :**
+
+| Tarif | Coût/an | Économie vs état actuel |
+|---|---|---|
+| 3CL (0,22 €/kWh) | **~330 €/an** | −921 €/an (−74 %) |
+| Réel 2025 (0,25 €/kWh) | **~375 €/an** | ~−925 €/an |
+
+**Facture totale propriété (4 logements, ~292 m²) :**
+- ~330 × (292/51,7) ≈ **1 865 €/an** (3CL)
+- ~375 × (292/51,7) ≈ **2 120 €/an** (réel 2025)
+
+#### Chiffrage G1
+
+| Poste | Coût TTC estimé |
+|---|---|
+| PAC eau/eau géothermique 25 kW (ex : Viessmann Vitocal 200-G, Stiebel WPF 25) | 10 000 – 15 000 € |
+| Sondes géothermiques verticales : 5 sondes × 120 m × 40 €/m (forage + sonde + coulis) | 24 000 – 30 000 € |
+| Tranchée horizontale de liaison jardin → cave (8 m inter-bâtiments + 10 m internes) | 2 000 – 4 000 € |
+| Ballon tampon 300 L + vase d'expansion + soupapes | 1 500 – 2 500 € |
+| Module hydraulique central (séparateur, manifold, by-pass) | 2 000 – 4 000 € |
+| Adaptation réseau bitube existant (nettoyage, désembouage, robinets thermostatiques) | 2 000 – 5 000 € |
+| Remplacement circulateur collectif (pompe ECM) | 500 – 1 000 € |
+| Compteurs d'énergie thermique (calorimètres) × 4 logements | 1 200 – 2 400 € |
+| CET individuels 150 L × 4 (si non existants) | 3 000 – 5 200 € |
+| VMC hygro B × 4 logements (si non existantes) | 4 000 – 8 000 € |
+| Tableau électrique PAC + câblage (triphasé 400V recommandé) | 2 000 – 4 000 € |
+| Dépose chaudière gaz + raccordements + résiliation réseau | 2 000 – 4 000 € |
+| Étude géothermique préalable + permis + géologue | 2 000 – 4 000 € |
+| **Total brut G1** | **56 200 – 89 100 €** |
+| Aides financières (voir D.8) | −18 000 à −30 000 € |
+| **Total net G1 estimé** | **≈ 38 000 – 59 000 €** |
+
+---
+
+### D.4 Scénario G2 — PAC géothermique + installation complète neuve
+
+**Principe** : remplacement intégral du système de chauffage. Canalisations pré-isolées neuves dimensionnées pour basse température (40–45 °C), nouveaux radiateurs eau de grande surface (panneaux acier ou fonte), pompes ECM à vitesse variable. Ce scénario maximise le SCOP réel et la durée de vie du système.
+
+#### Avantage basse température pour le SCOP réel
+
+| Température départ | COP réel (sol à 10 °C) | SCOP annuel estimé | Surcoût vs G1 |
+|---|---|---|---|
+| 55 °C (G1 — existant) | 2,8 – 3,2 | ~3,1 | Référence |
+| 45 °C (G2 — optimisé) | 3,5 – 4,0 | ~3,8 | — |
+| 35 °C (plancher chauffant) | 4,2 – 5,0 | ~4,5 | +15 000 à +35 000 € (travaux PCH) |
+
+> **Géocooling passif (bonus G2)** : en été, la PAC peut inverser le cycle sans compresseur — elle fait circuler l'eau des sondes (10–12 °C) dans les canalisations et rafraîchit passivement les logements via les radiateurs (ventilo-convecteurs) ou le plancher. Consommation électrique : **< 200 W** (pompe seule). Ce rafraîchissement est gratuit et silencieux, idéal pour les combles du T3.
+
+#### Dimensionnement radiateurs BT (G2)
+
+Pour fonctionner à 45/35 °C, les radiateurs doivent être **2,4× plus puissants** qu'à 70/55 °C pour le même apport thermique :
+
+| Pièce (T3, 51 m²) | Besoin réel | Radiateur 70/55 °C (existant) | Radiateur BT 45/35 °C (G2) |
+|---|---|---|---|
+| Salon (×2) | 2 × 620 W | 2 × 1 000 W | 2 × 2 400 W (panneau acier double) |
+| Chambre | 490 W | 800 W | 1 200 W |
+| Cuisine | 300 W | 500 W | 720 W |
+| SDB | 280 W | 400 W | 700 W |
+| **Total** | **2 310 W** | **3 500 W** | **7 720 W** |
+
+#### Calcul DPE 3CL — Scénario G2 (par logement de 51,7 m²)
+
+| Poste | kWh EF/an | kWh EP/an | Détail |
+|---|---|---|---|
+| **Chauffage (PAC géo)** | **602** | **1 385** | Bch=2 010 / (SCOP 3,5 × rd 0,95 × re 0,98) |
+| **Auxiliaires** (circ. ECM + VMC) | **143** | **329** | Pompes ECM 20 W × 8 760 h (share) + VMC |
+| **ECS** (CET individuel 150 L) | **505** | **1 162** | Inchangé |
+| **Éclairage** | **164** | **378** | Inchangé |
+| **Total** | **1 414** | **3 254** | |
+| **EP/m²** | | **≈ 63 EP/m²** | **→ Classe A** |
+| **EP/m² (coeff. 2026 × 1,9)** | | **≈ 52 EP/m²** | **→ Classe A solide** |
+
+**Facture annuelle estimée (51,7 m²) :**
+
+| Tarif | Coût/an | Économie vs état actuel |
+|---|---|---|
+| 3CL (0,22 €/kWh) | **~311 €/an** | −940 €/an (−75 %) |
+| Réel 2025 (0,25 €/kWh) | **~354 €/an** | ~−950 €/an |
+
+**Facture totale propriété (4 logements) :**
+- ~311 × (292/51,7) ≈ **1 756 €/an** (3CL)
+- ~354 × (292/51,7) ≈ **1 997 €/an** (réel 2025)
+
+#### Chiffrage G2 (surcoût par rapport à G1)
+
+| Poste | Coût TTC estimé | Δ vs G1 |
+|---|---|---|
+| PAC eau/eau géothermique 25 kW | 10 000 – 15 000 € | = |
+| Sondes géothermiques verticales (identiques) | 24 000 – 30 000 € | = |
+| Tranchée inter-bâtiments | 2 000 – 4 000 € | = |
+| Ballon tampon 300 L + hydraulique | 1 500 – 2 500 € | = |
+| **Canalisations pré-isolées twin-pipe** (≈ 150 m réseau total) | **6 000 – 12 000 €** | **+4 000 – 8 000 €** |
+| **Radiateurs eau BT panel acier** (~20 unités, 292 m²) | **8 000 – 15 000 €** | **+6 000 – 10 000 €** |
+| Robinets thermostatiques électroniques × 20 | 1 500 – 3 000 € | +500 € |
+| Compteurs d'énergie thermique × 4 | 1 200 – 2 400 € | = |
+| CET individuels × 4 | 3 000 – 5 200 € | = |
+| VMC × 4 | 4 000 – 8 000 € | = |
+| Électricité + tableau PAC | 2 000 – 4 000 € | = |
+| Dépose ancien système (étendu : tous les radiateurs et tuyauteries) | 4 000 – 8 000 € | +2 000 – 4 000 € |
+| Études + permis | 2 000 – 4 000 € | = |
+| **Total brut G2** | **69 200 – 113 100 €** | **+13 000 – 24 000 € vs G1** |
+| Aides financières | −18 000 à −30 000 € | = |
+| **Total net G2 estimé** | **≈ 51 000 – 83 000 €** | |
+
+---
+
+### D.5 Individualisation des consommations et de la commande par logement
+
+Un système de chauffage collectif doit impérativement permettre à chaque logement de **contrôler sa propre température** et d'être **facturé individuellement**. Voici les solutions disponibles.
+
+#### Régulation individuelle par logement
+
+| Solution | Principe | Coût par logement | Compatible G1/G2 |
+|---|---|---|---|
+| **Robinets thermostatiques** (RTV) sur chaque radiateur | Régulation mécanique, chaque pièce ajuste son radiateur | 20 – 50 € par radiateur | ✅ G1 et G2 |
+| **Robinets thermostatiques électroniques** (têtes programmables) | Programmation horaire + détection fenêtre ouverte, WiFi | 40 – 100 € par radiateur | ✅ G1 et G2 (recommandé G2) |
+| **Vanne motorisée d'appartement** | Coupe complètement le circuit de l'appartement si absence | 150 – 300 € par appart. | ✅ G1 et G2 |
+| **Thermostat central d'appartement** + vanne 3 voies | Régulation par pièce pilote avec circuit secondaire dédié | 200 – 500 € par appart. | ✅ G2 recommandé |
+
+> **Recommandation** : G1 → robinets thermostatiques classiques sur chaque radiateur (solution minimale, 400–600 € par appartement en matériel). G2 → têtes thermostatiques programmables WiFi (Danfoss Eco, Tado, Netatmo) + vanne motorisée d'arrêt, pour un pilotage précis par pièce.
+
+#### Comptage individuel des consommations
+
+**Option 1 — Répartiteurs de chaleur (allocateurs)** *(G1 recommandé)*
+
+Petits capteurs électroniques fixés sur la tête de chaque radiateur. Ils mesurent l'écart de température entre la surface du radiateur et l'air ambiant, enregistrant une valeur proportionnelle à la chaleur émise. En fin d'année, un relevé permet de ventiler la facture collective entre logements.
+
+| Caractéristique | Valeur |
+|---|---|
+| Coût par radiateur | 30 – 80 € |
+| Coût total (≈ 20 radiateurs) | **600 – 1 600 €** |
+| Précision | Relative (±15 %) — suffisante pour la répartition |
+| Obligation légale | Relevé annuel obligatoire si bâtiment > 10 kW |
+| Relevé | Télérelevé radio ou visite annuelle |
+
+**Option 2 — Calorimètres d'appartement (compteurs d'énergie thermique)** *(G2 recommandé)*
+
+Un calorimètre (compteur Wh thermique) est installé sur l'arrivée de chaque appartement. Il mesure le débit + la différence de température entrée/sortie → kWh consommés avec précision.
+
+| Caractéristique | Valeur |
+|---|---|
+| Coût par appartement | 250 – 600 € (fourniture + pose) |
+| Coût total (4 appartements) | **1 000 – 2 400 € |
+| Précision | Haute (±2 %) — utilisable pour facturation directe |
+| Norme | EN 1434, Directive MID |
+| Relevé | Télérelevé M-Bus ou Wired-M-Bus |
+
+> **Comparaison** : le calorimètre est plus précis et juridiquement robuste (facturation directe kWh). Le répartiteur est moins cher mais ne mesure qu'une valeur relative (la facture est toujours répartie proportionnellement sur le total collectif).
+
+#### Répartition fixe/variable des charges collectives
+
+Quelle que soit l'option de comptage, la facture globale se décompose :
+
+| Type de charge | Part fixe (abonnement + entretien PAC) | Part variable (énergie consommée) |
+|---|---|---|
+| Méthode légale (décret 2012) | **30 %** de la facture totale répartis au prorata des m² | **70 %** répartis au prorata des relevés individuels |
+| Exemple pour 51 m² (292 m² total) | 51/292 × 30 % = 5,2 % de la facture totale (fixe) | 70 % × part individuelle mesurée |
+
+---
+
+### D.6 Eau chaude sanitaire (ECS) — Options collectives vs individuelles
+
+#### Option A — CET individuels par logement *(Recommandée — déjà simulée en S3/S9)*
+
+Chaque appartement conserve ou installe son propre chauffe-eau thermodynamique (CET) de 150 L. L'ECS est totalement indépendante du système de chauffage collectif.
+
+| Avantage | Inconvénient |
+|---|---|
+| ✅ Facturation individuelle automatique (compteur élec. locataire) | ❌ Encombrement (1 ballon 150 L par logement) |
+| ✅ Panne indépendante (un CET en panne n'affecte pas les voisins) | ❌ Investissement initial ×4 |
+| ✅ Régime locatif simplifié (le locataire paie son propre CET) | ❌ 4 unités à entretenir |
+| ✅ Déjà modélisé en 3CL (COP = 2,5 forfaitaire) | — |
+| **Impact DPE** : −1 162 kWh EP par logement (intégré dans G1/G2 ci-dessus) | |
+
+#### Option B — ECS collective via PAC géothermique + HIU par logement
+
+Le système de géothermie produit aussi l'eau chaude sanitaire. Chaque appartement reçoit un **module interface hydraulique (HIU — Heat Interface Unit)** : un petit échangeur à plaques qui produit l'ECS à la demande à partir du circuit collectif, sans stockage individuel (ou avec un micro-ballon de 15–30 L).
+
+```
+[PAC géo 25 kW]
+   │
+   ├─ [Circuit chauffage] → radiateurs
+   │
+   └─ [Circuit ECS 55–60 °C] ──┬── [HIU T3 51 m²]  → robinets eau chaude
+                                ├── [HIU T3 66 m²]
+                                ├── [HIU T4 87 m²]
+                                └── [HIU T4 88 m²]
+```
+
+| Paramètre | Valeur |
+|---|---|
+| Coût HIU par logement (échangeur + pompe + vanne + compteur ECS) | 1 500 – 3 000 € |
+| Coût total 4 HIU | **6 000 – 12 000 €** |
+| Comptage ECS | Volume d'eau chaude mesuré par compteur d'eau froide d'appoint |
+| COP ECS via PAC à 55 °C | ~2,0 – 2,5 (moins bon qu'un CET air ext. isolé) |
+| Gain espace logement | ✅ Pas de ballon 150 L |
+| Impact DPE ECS via PAC | ≈ −15 à −25 EP/m² vs CET individuel (COP inférieur) |
+
+> ⚠️ **Attention DPE** : produire l'ECS via la PAC géothermique à 55–60 °C dégrade le COP (2,0–2,5) par rapport à un CET sur air extérieur (COP 2,5 forfaitaire 3CL + gain géothermique). Dans le bilan 3CL, les CET individuels restent donc **légèrement meilleurs pour le DPE** que l'ECS collective par géothermie, sauf si la PAC est spécialement optimisée pour la production ECS.
+
+#### Option C — Ballon collectif avec boucle de distribution et compteurs d'eau chaude
+
+Un grand ballon collectif (500 L) est installé dans la cave. L'eau chaude est distribuée en boucle isolée vers chaque appartement. Un compteur d'eau chaude à l'entrée de chaque appartement mesure la consommation.
+
+| Paramètre | Valeur |
+|---|---|
+| Ballon collectif 500 L | 2 000 – 4 000 € |
+| Réseau boucle ECS pré-isolé | 3 000 – 6 000 € |
+| Compteurs eau chaude × 4 | 400 – 800 € |
+| Pertes boucle (sans bon calorifugeage) | 15 – 30 % de l'énergie ECS |
+| Impact DPE | Pertes de distribution pénalisent le bilan (rd_ECS ≈ 0,85) |
+
+> **Verdict ECS** : pour une propriété en location, **l'Option A (CET individuels)** est la plus simple et la plus favorable au DPE. Elle permet à chaque locataire de gérer et payer son propre chauffe-eau. L'Option B (HIU) se justifie si l'espace manque dans chaque appartement ou en copropriété avec un seul propriétaire voulant une gestion centralisée.
+
+---
+
+### D.7 Comparatif des scénarios — Propriété complète (292 m²)
+
+#### Par logement de référence (T3, 51,7 m²) — Coefficient 3CL 2021
+
+| Scénario | Système | EP/m² | Classe | Facture 3CL | Facture réelle 2025 |
+|---|---|---|---|---|---|
+| **S0** | État actuel (gaz collectif) | **221** | **D** | 1 251 €/an | ~1 500 €/an |
+| **S3** | Inertie élec. + CET + VMC | **127** | **C** | 764 €/an | ~975 €/an |
+| **S9** | PAC air/air + CET + VMC | **64** | **A** | 510 €/an | ~665 €/an |
+| **S11** | PAC air/eau + CET + VMC | **75** | **B** | 586 €/an | ~745 €/an |
+| **G1** | PAC géo + réseau existant + CET | **~67** | **A** | ~330 €/an | ~375 €/an |
+| **G2** | PAC géo + installation neuve + CET | **~63** | **A** | ~311 €/an | ~354 €/an |
+
+#### Propriété complète (4 logements, ~292 m²)
+
+| Scénario | EP/m² | Facture totale 3CL | Facture totale réelle | Invest. net (après aides) | ROI |
+|---|---|---|---|---|---|
+| État actuel | 221 | ~7 070 €/an | ~8 500 €/an | — | — |
+| G1 — géo réseau existant | ~67 | ~1 865 €/an | ~2 120 €/an | 38 000 – 59 000 € | **8 – 14 ans** |
+| G2 — géo installation neuve | ~63 | ~1 756 €/an | ~1 997 €/an | 51 000 – 83 000 € | **12 – 19 ans** |
+
+> **Économie annuelle** : G1 permet d'économiser **~5 200 – 6 380 €/an** vs l'état actuel pour toute la propriété. G2 offre ~120 €/an supplémentaire vs G1 pour 13 000 – 24 000 € d'investissement en plus → le **G1 est généralement plus rentable à court/moyen terme**.
+
+---
+
+### D.8 Aides financières spécifiques géothermie (2025)
+
+| Aide | Dispositif | Montant estimé | Conditions |
+|---|---|---|---|
+| **MaPrimeRénov' Chauffage** | PAC géothermique (R-1) | **2 000 – 4 000 € par logement** (selon revenus) = 8 000 – 16 000 € total | Artisan RGE, résidence principale (si propriétaire occupant) ou bailleur sous conditions |
+| **CEE** — BAR-TH-141 | PAC géothermique collective | **3 000 – 7 000 €** (forfait par puissance installée) | Bâtiment résidentiel > 15 ans |
+| **CEE** — BAR-TH-148 | CET × 4 | **320 – 800 €** (80–200 € × 4 appareils) | — |
+| **Éco-PTZ** | Prêt taux zéro rénovation | Jusqu'à **50 000 €** | Travaux groupés, banque partenaire |
+| **TVA 5,5 %** | Sur fourniture + pose | Économie ~12–15 % du HT | Logement > 2 ans, artisan professionnel |
+| **Aides locales** | Région Grand Est + ADEME + Eurométropole | 1 000 – 3 000 € | Variable selon programme en cours |
+| **Total aides estimées** | | **18 000 – 30 000 €** | |
+
+> **Strasbourg — avantage nappe phréatique** : si l'étude géologique confirme l'accès à la nappe alluviale du Rhin (fréquent en Alsace à 10–20 m de profondeur, T° constante 12–14 °C), le forage coûte **3 fois moins cher** que les sondes profondes (~8 000–15 000 € pour 2 puits de pompage/rejet vs 24 000–30 000 € pour sondes verticales). Le COP monte alors à **4,5–5,0**, le SCOP annuel à **4,0–4,5**. Une **déclaration en Préfecture du Bas-Rhin** est requise (délai ~3 mois, pas de refus systématique en zone non protégée).
+
+---
+
+### D.9 Avantages et inconvénients
+
+#### ✅ Avantages
+
+| Avantage | G1 | G2 |
+|---|---|---|
+| **DPE Classe A** garanti pour les 4 logements | ✅ | ✅ |
+| **SCOP stable** quelle que soit la température extérieure (vs PAC air/air pénalisée < −7 °C) | ✅ | ✅ |
+| **Pas d'unité extérieure** visible — pas de nuisances sonores — pas de travaux en copropriété | ✅ | ✅ |
+| **Géocooling passif** en été (rafraîchissement gratuit < 200 W électrique) | ⚠️ Partiel (radiateurs peu adaptés) | ✅ Plein (ventilo-convecteurs ou plancher) |
+| **Durée de vie 20–25 ans** (vs 15 ans pour PAC air/air) | ✅ | ✅ |
+| **Solution centralisée** : 1 seul équipement à entretenir pour 4 logements | ✅ | ✅ |
+| **Économies d'échelle** : coût de maintenance mutualisé | ✅ | ✅ |
+| **SCOP réel optimisé** (basse température) | ❌ 2,8–3,2 (haute temp. contrainte) | ✅ 4,0–4,5 (basse temp.) |
+| **Compatibilité plancher chauffant** futur | ❌ | ✅ |
+| **Investissement plus bas** | ✅ | ❌ |
+
+#### ❌ Inconvénients
+
+| Inconvénient | G1 | G2 |
+|---|---|---|
+| **Investissement initial élevé** | 38 000–59 000 € net | 51 000–83 000 € net |
+| **Étude géothermique préalable obligatoire** (3–6 mois, 2 000–4 000 €) | ✅ obligatoire | ✅ obligatoire |
+| **Autorisation préfectorale** (nappe phréatique) ou permis forage (sondes) | ✅ | ✅ |
+| **Tranchée inter-bâtiments** : travaux de génie civil entre les deux bâtiments | ✅ | ✅ |
+| **Réseau long** (cave → jardin = ~28 m) : pertes de distribution plus élevées qu'un système compact | ✅ pénalisant | ⚠️ maîtrisé avec isolation |
+| **Dépendance à un système unique** : panne PAC = 4 logements sans chauffage | ✅ risque | ✅ risque |
+| **Gestion collective** : nécessite une convention entre propriétaires si la propriété est divisée | ✅ | ✅ |
+| **Vérification compatibilité radiateurs** (surdimensionnement requis) | ⚠️ Indispensable | ❌ sans objet |
+| **SCOP réel pénalisé** (haute température d'émission) | ⚠️ SCOP ~3,1 | ✅ SCOP ~4,2 |
+| **Délai de réalisation** : 6–12 mois (études + autorisations + travaux) | ✅ | ✅ |
+
+#### Synthèse — Quelle option choisir ?
+
+```
+Contraintes budgétaires ?
+├── Budget < 50 000 € net   →  G1 (réutilisation réseau existant)
+│   ├── Vérifier surdimensionnement radiateurs existants
+│   └── Prévoir robinets thermostatiques + calorimètres
+│
+└── Budget 50 000 – 85 000 € net  →  G2 (installation complète)
+    ├── Radiateurs BT neufs → confort + SCOP optimal
+    ├── Géocooling passif possible (été)
+    └── Système pérenne 25 ans sans compromis
+        │
+        └── Objectif vacance locative minimale ?
+            ├── OUI  →  4 CET individuels (Option A ECS)
+            └── NON  →  HIU par logement (Option B ECS)
+```
+
+---
+
+*Les simulations G1 et G2 sont basées sur la méthode 3CL-DPE 2021 appliquée proportionnellement aux données réelles du T3 (51,7 m², DPE 2567E2792599K). Les coûts sont des estimations HT+TVA marché Strasbourg 2025. Une étude thermique et géothermique par bureau d'études certifié RGE est indispensable avant tout investissement.*
